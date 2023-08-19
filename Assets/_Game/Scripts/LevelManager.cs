@@ -52,6 +52,8 @@ namespace Gameplay.Levels
 		public void SetPause(bool isPaused)
 		{
 			_isPaused = isPaused;
+			
+			_LevelGenerator.SetPause(isPaused);
 		}
 
 

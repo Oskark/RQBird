@@ -14,8 +14,8 @@ namespace Gameplay.Levels
 		[SerializeField] private LevelSegment[] _LevelSegments;
 		[SerializeField] private LevelSegment _FloorSegment;
 
-		private float _floorRepeatRange;
-		
+		[SerializeField] private Transform _SpawnContainer;
+        
         
 		private Transform _PlayerTransform;
 		private float _distancePassed = 0;
@@ -25,10 +25,6 @@ namespace Gameplay.Levels
 
 		private Action _onObstaclePassed;
 
-		private void Awake()
-		{
-			_floorRepeatRange = _FloorSegment.GetZLength();
-		}
 
 		private void Start()
 		{
@@ -67,7 +63,7 @@ namespace Gameplay.Levels
 
 		private void SpawnFloorAt( Vector3 newSpawnPosition )
 		{
-			var newFloor = Instantiate(_FloorSegment, newSpawnPosition, Quaternion.identity);
+			var newFloor = Instantiate(_FloorSegment, newSpawnPosition, Quaternion.identity, _SpawnContainer);
 			newFloor.Init(_LevelManager, OnFloorDestroyed);
 			
 			_spawnedFloorSegments.Add(newFloor);
@@ -118,7 +114,7 @@ namespace Gameplay.Levels
 		private void SpawnObstacleAt( LevelSegment randomObstacle, Vector3 obstacleSpawnPosition )
 		{
 			var spawnPosition = obstacleSpawnPosition + randomObstacle.SpawnOffset;
-			var newObstacle = Instantiate(randomObstacle, spawnPosition, Quaternion.identity);
+			var newObstacle = Instantiate(randomObstacle, spawnPosition, Quaternion.identity, _SpawnContainer);
 			newObstacle.Init( _LevelManager, OnObstacleDestroyed );
 			
 			_spawnedObstacles.Add(newObstacle);
@@ -144,6 +140,12 @@ namespace Gameplay.Levels
 		public void Init( Action onObstaclePassed )
 		{
 			_onObstaclePassed = onObstaclePassed;
+		}
+
+		public void SetPause( bool isPaused )
+		{
+			_spawnedFloorSegments.ForEach( arg => arg.SetPause(isPaused) );
+			_spawnedObstacles.ForEach( arg => arg.SetPause(isPaused) );
 		}
 	}
  

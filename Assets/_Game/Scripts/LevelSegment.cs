@@ -9,6 +9,8 @@ namespace Gameplay.Levels
 	public class LevelSegment : MonoBehaviour
 	{
 
+		public static event Action OnPlayerHitSegment;
+		
 		[SerializeField] private float _Speed = 8f;
 
 		[field: SerializeField] public Vector3 SpawnOffset { get; private set; }
@@ -17,6 +19,7 @@ namespace Gameplay.Levels
 		[SerializeField] private float _DistanceRemovalThreshold = 10f;
 
 		private LevelManager _levelManager;
+		private bool _isPaused = false;
 		
 		private Action<LevelSegment> _onElementDestroyed;
 
@@ -34,6 +37,8 @@ namespace Gameplay.Levels
 		
 		private void Update()
 		{
+			if ( _isPaused ) return;
+			
 			transform.position += Vector3.back * (Time.deltaTime * _Speed * _levelManager.SpeedModifier);
 
 			if ( transform.position.z < -_DistanceRemovalThreshold )
@@ -44,11 +49,23 @@ namespace Gameplay.Levels
 			}
 		}
 
+		private void OnCollisionEnter( Collision other )
+		{
+			if ( other.gameObject.CompareTag( "Player" ) )
+			{
+				OnPlayerHitSegment?.Invoke();
+			}
+		}
+
 		public float GetZLength()
 		{
 			return _Collider.bounds.size.z;
 		}
 
 
+		public void SetPause( bool isPaused )
+		{
+			_isPaused = isPaused;
+		}
 	}
 }

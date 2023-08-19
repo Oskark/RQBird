@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8767361265541049670}
   - component: {fileID: 5966435748255731349}
   - component: {fileID: 3679528481056160081}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall_Bottom
-  m_TagString: Untagged
+  m_TagString: LevelSegment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

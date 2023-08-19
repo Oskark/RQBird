@@ -8,10 +8,20 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _Rigidbody;
 
+    public event Action OnPlayerHitSegment;
+    
     private void Update()
     {
         HandleInput();
         HandleBoundaries();
+    }
+    
+    private void OnCollisionEnter( Collision other )
+    {
+        if ( other.gameObject.CompareTag( "LevelSegment" ) )
+        {
+            OnPlayerHitSegment?.Invoke();
+        }
     }
 
     private void HandleBoundaries()
