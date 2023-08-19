@@ -1,8 +1,6 @@
 ﻿
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using Zenject;
 
 namespace Gameplay.Levels
 {

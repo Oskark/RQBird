@@ -1,5 +1,6 @@
 ﻿using Gameplay.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Gameplay.Levels
 {
@@ -7,6 +8,7 @@ namespace Gameplay.Levels
 	{
 		[SerializeField] private LevelManager _LevelManager;
 		[SerializeField] private PlayerController _PlayerController;
+		[SerializeField] private HighScoresManager _HighScoresManager;
 
 		[SerializeField] private GameplayHUD _GameplayHUD;
 
@@ -18,9 +20,30 @@ namespace Gameplay.Levels
 
 		private void OnPlayerHitSegment()
 		{
+			_PlayerController.OnPlayerHitSegment -= OnPlayerHitSegment;
+			
 			_LevelManager.SetPause(true);
 			
-			_GameplayHUD.ShowGameOverPanel( (int) _LevelManager.DistancePassed, 1, null );
+			var obtainedScore = (int) _LevelManager.DistancePassed;
+			_HighScoresManager.Init( () =>
+			{
+				_HighScoresManager.RegisterScore( obtainedScore, out var highScorePosition, out var lowestHighScoreValue );
+			
+				_GameplayHUD.ShowGameOverPanel( obtainedScore, highScorePosition, lowestHighScoreValue, OnRestart, OnExit );
+
+			} );
+		}
+
+		private void OnRestart()
+		{
+			SceneManager.UnloadSceneAsync( "Gameplay" );
+			SceneManager.LoadScene( "Gameplay" );
+		}
+
+		private void OnExit()
+		{
+			SceneManager.UnloadSceneAsync( "Gameplay" );
+			SceneManager.LoadScene( "MainMenu" );
 		}
 	}
 }

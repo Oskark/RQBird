@@ -1,4 +1,5 @@
 ﻿
+using System;
 using UnityEngine;
 
 namespace Gameplay.UI
@@ -7,17 +8,17 @@ namespace Gameplay.UI
 	{
 		[SerializeField] private GameOverPanel _GameOverPanel;
 		
-		public void ShowGameOverPanel( int score, int highScorePosition, int? lowestHighScoreValue )
+		public void ShowGameOverPanel( int score, int highScorePosition, int? lowestHighScoreValue, Action onRestart, Action onExit )
 		{
 			_GameOverPanel.gameObject.SetActive( true );
 			
-			if ( highScorePosition > 0 )
+			if ( highScorePosition >= 0 )
 			{
-				_GameOverPanel.ShowWithHighscore( score, highScorePosition );
+				_GameOverPanel.ShowWithHighscore( score, highScorePosition, onRestart, onExit );
 			}
 			else
 			{
-				_GameOverPanel.ShowWithoutHighscore( score, lowestHighScoreValue.GetValueOrDefault(0) );
+				_GameOverPanel.ShowWithoutHighscore( score, lowestHighScoreValue.GetValueOrDefault(0), onRestart, onExit );
 			}
 		}
 	}

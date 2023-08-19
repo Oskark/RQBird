@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -13,21 +14,41 @@ public class GameOverPanel : MonoBehaviour
     [SerializeField] private GameObject _NoHighScoreContainer;
     [SerializeField] private TextMeshProUGUI _ToGetHighScoreValText;
 
-    public void ShowWithHighscore( int score, int highScorePosition )
+
+    private Action _onRestart;
+    private Action _onExit;
+    
+    public void ShowWithHighscore( int score, int highScorePosition, Action onRestart, Action onExit )
     {
         _ScoreText.text = score.ToString();
         _HighScorePositionText.text = highScorePosition.ToString();
         
         _HighScoreContainer.SetActive( true );
         _NoHighScoreContainer.SetActive( false );    
+        
+        _onRestart = onRestart;
+        _onExit = onExit;
     }
     
-    public void ShowWithoutHighscore( int score, int lowestHighScoreAmount )
+    public void ShowWithoutHighscore( int score, int lowestHighScoreAmount, Action onRestart, Action onExit )
     {
         _ScoreText.text = score.ToString();
         _ToGetHighScoreValText.text = lowestHighScoreAmount.ToString();
         
         _HighScoreContainer.SetActive( false );
         _NoHighScoreContainer.SetActive( true );
+        
+        _onRestart = onRestart;
+        _onExit = onExit;
+    }
+    
+    public void Evt_OnRestart()
+    {
+        _onRestart?.Invoke();
+    }
+
+    public void Evt_OnExit()
+    {
+        _onExit?.Invoke();
     }
 }
