@@ -33,7 +33,7 @@ namespace Gameplay
 
 		private void Update()
 		{
-			if (IsPaused) return;
+			if ( IsPaused ) return;
 
 			WasJump = ReadTouchJump() || ReadKeyboardJump();
 			SlideChange = ReadTouchSlide() + ReadKeyboardSlide();

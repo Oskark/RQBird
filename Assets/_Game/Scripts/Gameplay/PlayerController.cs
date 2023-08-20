@@ -48,7 +48,9 @@ public class PlayerController : MonoBehaviour
         // TODO: Obtain inputs from device
         if (_InputManager.WasJump)
         {
-            _Rigidbody.AddForce(Vector3.up * 15f, ForceMode.VelocityChange);
+            if (_Rigidbody.velocity.y < 0) _Rigidbody.velocity = _Rigidbody.velocity.With( y: 0 );
+            
+            _Rigidbody.AddForce(Vector3.up * 10f, ForceMode.VelocityChange);
         }
 
         var slideChanged = _InputManager.SlideChange;
