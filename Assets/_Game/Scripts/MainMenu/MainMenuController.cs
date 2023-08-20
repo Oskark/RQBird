@@ -21,7 +21,6 @@ public class MainMenuController : MonoBehaviour
     public void Evt_StartGame()
     {
         SceneManager.LoadScene( "Gameplay" );
-        SceneManager.UnloadSceneAsync( "MainMenu" );
     }
     
     public void Evt_QuitGame()

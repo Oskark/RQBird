@@ -74,7 +74,6 @@ namespace Gameplay.Levels
 
 		private void OnExit()
 		{
-			SceneManager.UnloadSceneAsync( "Gameplay" );
 			SceneManager.LoadScene( "MainMenu" );
 		}
 	}
