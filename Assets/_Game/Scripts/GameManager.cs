@@ -69,7 +69,6 @@ namespace Gameplay.Levels
 
 		private void OnRestart()
 		{
-			SceneManager.UnloadSceneAsync( "Gameplay" );
 			SceneManager.LoadScene( "Gameplay" );
 		}
 
