@@ -56,7 +56,7 @@ public class HighScoresManager : ScriptableObject, IHighScorable
 		var isHighScore = highScorePosition >= 0 && highScorePosition < _MaxHighScores;
 		if ( isHighScore )
 		{
-			_HighScores.Insert( highScorePosition, new HighScoreEntry( score, DateTime.UtcNow.Ticks ) );
+			_HighScores.Insert( highScorePosition, new HighScoreEntry( score, DateTime.Now.Ticks ) );
 
 			var isOverScoresLimit = _HighScores.Count > _MaxHighScores;
 			if (isOverScoresLimit)
@@ -74,8 +74,6 @@ public class HighScoresManager : ScriptableObject, IHighScorable
 
 		position = -1;
 		lowestHighScoreValue = _HighScores.Count > 0 ? _HighScores[^1].Score : -1;
-
-
 	}
 
 	public int GetHighScorePosition( int score )
