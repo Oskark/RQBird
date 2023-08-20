@@ -44,12 +44,37 @@ namespace Gameplay
 			return _LastSlideChanged;
 		}
 
+		private float _currentKeyboardSlide = 0;
 		private float ReadKeyboardSlide()
 		{
-			if (Input.GetKey(KeyCode.A)) return -1;
-			if (Input.GetKey(KeyCode.D)) return 1;
+			if (Input.GetKey(KeyCode.A))
+			{
+				if ( _currentKeyboardSlide > 0 )
+				{
+					_currentKeyboardSlide = 0;
+				}
+				else
+				{
+					_currentKeyboardSlide -= Time.deltaTime * 2f;
+				}
+			}
+			else if ( Input.GetKey( KeyCode.D ) )
+			{
+				if (_currentKeyboardSlide < 0)
+				{
+					_currentKeyboardSlide = 0;
+				}
+				else
+				{
+					_currentKeyboardSlide += Time.deltaTime * 2f;
+				}
+			}
+			else
+			{
+				_currentKeyboardSlide = 0;
+			}
 
-			return 0;
+			return _currentKeyboardSlide;
 		}
 
 
