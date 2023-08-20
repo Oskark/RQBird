@@ -65,7 +65,7 @@ namespace Gameplay.Levels
 		{
 			var newFloor = Instantiate(_FloorSegment, newSpawnPosition, Quaternion.identity, _SpawnContainer);
 			newFloor.Init(_LevelManager, OnFloorDestroyed);
-			
+			newFloor.SetPause( _isPaused );
 			_spawnedFloorSegments.Add(newFloor);
 		}
 
@@ -116,6 +116,7 @@ namespace Gameplay.Levels
 			var spawnPosition = obstacleSpawnPosition + randomObstacle.SpawnOffset;
 			var newObstacle = Instantiate(randomObstacle, spawnPosition, Quaternion.identity, _SpawnContainer);
 			newObstacle.Init( _LevelManager, OnObstacleDestroyed );
+			newObstacle.SetPause( _isPaused );
 			
 			_spawnedObstacles.Add(newObstacle);
 		}
@@ -144,8 +145,20 @@ namespace Gameplay.Levels
 
 		public void SetPause( bool isPaused )
 		{
+			_isPaused = isPaused;
+			
 			_spawnedFloorSegments.ForEach( arg => arg.SetPause(isPaused) );
 			_spawnedObstacles.ForEach( arg => arg.SetPause(isPaused) );
+		}
+
+		public (float left, float right) GetLevelBounds()
+		{
+			if (_spawnedFloorSegments.Count > 0 && _spawnedFloorSegments[0] != null)
+			{
+				return _spawnedFloorSegments[0].GetLeftRightBounds();
+			}
+			
+			return _FloorSegment.GetLeftRightBounds();
 		}
 	}
  

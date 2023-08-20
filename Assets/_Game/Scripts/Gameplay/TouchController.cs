@@ -18,41 +18,90 @@ namespace Gameplay
 			JumpPressed?.Invoke();
 		}
 
-		private float? _LastPointerPosition;
-
-		public void Evt_OnBeginSlide( BaseEventData eventData )
-		{
-			_LastPointerPosition = eventData.currentInputModule.input.GetTouch( 0 ).position.x;
-		}
+		private float? _beginMovementPosition;
+		private int? _beginMovementFingerID;
 		public void Evt_Slide( BaseEventData eventData )
 		{
-			_LastPointerPosition ??= LastPointerPosition( eventData );
+			var  noMovementYet = _beginMovementPosition == null;
+			if ( noMovementYet )
+			{
+				RegisterMovement( eventData );
+			}
 			
 			var currentPointerPosition = LastPointerPosition( eventData );
-			var delta = currentPointerPosition - _LastPointerPosition.Value;
-			
-			Debug.Log($"Delta: {delta}"  );
-			delta /= _TouchArea.sizeDelta.x;
-			
-			SlidePerformed?.Invoke( delta );
+			var delta = currentPointerPosition - _beginMovementPosition;
 
-			_LastPointerPosition = currentPointerPosition;
-		}
+			var areaToMoveCompletely = _TouchArea.rect.width / 3f;
+			delta = delta / areaToMoveCompletely;
 
-		private static float LastPointerPosition( BaseEventData eventData )
+			SlidePerformed?.Invoke( delta.Value );
+        }
+
+		private void RegisterMovement(BaseEventData eventData)
 		{
 			var input = eventData.currentInputModule.input;
-			if ( input.touchCount > 0 )
+			if ( Input.touchCount > 0 )
+			{
+				if ( Input.touchCount == 1 )
+				{
+					var touch = input.GetTouch( 0 );
+					_beginMovementPosition = touch.position.x;
+					_beginMovementFingerID = touch.fingerId;
+				}
+
+				var k = eventData as PointerEventData;
+				if ( k != null )
+				{
+					var touch = input.GetTouch( k.pointerId );
+					_beginMovementPosition = touch.position.x;
+					_beginMovementFingerID = touch.fingerId;
+				}
+            }
+			
+			if (Input.mousePresent)
+			{
+				_beginMovementPosition = LastPointerPosition( eventData );
+				_beginMovementFingerID = 0;
+			}
+		}
+
+		private float LastPointerPosition( BaseEventData eventData )
+		{
+			var input = eventData.currentInputModule.input;
+			
+			var  touchOccured = input.touchCount > 0;
+			if ( touchOccured )
+			{
+				var  oneTouchOccured = input.touchCount <= 1;
+				if ( oneTouchOccured ) // One touch - no need to search for the same finger id
+				{
+					return input.GetTouch( 0 ).position.x;
+				}
+				
+				// More than one touch - find proper touch position
+				for ( int i = 0; i < input.touchCount; i++ )
+				{
+					var touch = input.GetTouch( i );
+					var isSameFingerTouch = touch.fingerId == _beginMovementFingerID;
+					if ( isSameFingerTouch )
+					{
+						return touch.position.x;
+					}
+				}
+
+				// No touch with same finger id found, so we return the first touch position
 				return input.GetTouch( 0 ).position.x;
-			else
+			}
+			else // No touches - mouse
+			{
 				return input.mousePosition.x;
+			}
 		}
 
 		public void Evt_OnEndSlide( BaseEventData eventData )
 		{
-			_LastPointerPosition = null;
-			Debug.Log($"Delta = 0"  );
-			
+			_beginMovementPosition = null;
+
 			SlidePerformed?.Invoke( 0 );
 		}
 		

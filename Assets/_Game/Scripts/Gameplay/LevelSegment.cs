@@ -65,5 +65,11 @@ namespace Gameplay.Levels
 		{
 			_isPaused = isPaused;
 		}
+
+		public (float left, float right) GetLeftRightBounds()
+		{
+			var bc = _Collider as BoxCollider;
+			return (bc.bounds.min.x + 0.55f, bc.bounds.max.x - 0.5f); // TODO: take this value from proper place - player collider
+		}
 	}
 }

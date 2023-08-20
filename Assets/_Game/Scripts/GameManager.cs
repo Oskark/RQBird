@@ -14,8 +14,41 @@ namespace Gameplay.Levels
 
 		private void Awake()
 		{
+			Application.targetFrameRate = 60;
+			
 			_PlayerController.OnPlayerHitSegment -= OnPlayerHitSegment;
 			_PlayerController.OnPlayerHitSegment += OnPlayerHitSegment;
+
+			PrepareGame();
+		}
+
+		private void PrepareGame()
+		{
+			FreezePlayer();
+			FreezeLevel();
+
+			StartCountdown();
+		}
+
+		private void FreezePlayer()
+		{
+			_PlayerController.SetPause( true );
+		}
+
+		private void FreezeLevel()
+		{
+			_LevelManager.SetPause( true );
+		}
+
+		private void StartCountdown()
+		{
+			_GameplayHUD.ShowCountdown( OnCountdownFinished );
+		}
+
+		private void OnCountdownFinished()
+		{
+			_PlayerController.SetPause( false );
+			_LevelManager.SetPause( false );
 		}
 
 		private void OnPlayerHitSegment()

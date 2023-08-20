@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,13 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private GameObject _HighScoresPanel;
 
     [SerializeField] private HighScoresDisplayer _HighScoresDisplayer;
-    
+
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
+
     public void Evt_StartGame()
     {
         SceneManager.LoadScene( "Gameplay" );

@@ -6,7 +6,22 @@ namespace Gameplay.UI
 {
 	public class GameplayHUD : MonoBehaviour
 	{
+		[SerializeField] private CountdownDisplayer _CountdownDisplayer;
 		[SerializeField] private GameOverPanel _GameOverPanel;
+
+		public void ShowCountdown(Action onFinish)
+		{
+			_CountdownDisplayer.gameObject.SetActive( true );
+			
+			_CountdownDisplayer.ShowCountdown( OnCountdownFinished );
+
+			void OnCountdownFinished()
+			{
+				_CountdownDisplayer.gameObject.SetActive( false );
+				
+				onFinish?.Invoke();
+			}
+		}
 		
 		public void ShowGameOverPanel( int score, int highScorePosition, int? lowestHighScoreValue, Action onRestart, Action onExit )
 		{

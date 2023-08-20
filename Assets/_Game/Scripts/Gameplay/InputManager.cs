@@ -19,8 +19,8 @@ namespace Gameplay
         
 		public bool IsPaused { get; set; }
 
-		private bool _JumpFromTouchWasPressed;
-		private float _LastSlideChanged;
+		private bool _JumpFromTouchWasPressed = false;
+		private float _LastSlideChanged = 0;
 
 		private void Awake()
 		{
@@ -37,12 +37,11 @@ namespace Gameplay
 
 			WasJump = ReadTouchJump() || ReadKeyboardJump();
 			SlideChange = ReadTouchSlide() + ReadKeyboardSlide();
-		}
+        }
 
 		private float ReadTouchSlide()
 		{
-			var sign = Mathf.Sign( _LastSlideChanged );
-			return sign * Mathf.Min(1, Mathf.Abs(_LastSlideChanged));
+			return _LastSlideChanged;
 		}
 
 		private float ReadKeyboardSlide()

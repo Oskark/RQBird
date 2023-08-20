@@ -6,6 +6,8 @@ namespace Gameplay.Levels
 	public interface ILevelManagerable
 	{
 		public float SpeedModifier { get; }
+		
+		public (float left, float right) GetLevelBounds(); 
 	}
 	public class LevelManager : MonoBehaviour, ILevelManagerable
 	{
@@ -47,6 +49,11 @@ namespace Gameplay.Levels
 
 			UpdateDistancePassed();
 			ApplyCurrentDistanceToLevelGenerator();
+		}
+		
+		public (float left, float right) GetLevelBounds()
+		{
+			return _LevelGenerator.GetLevelBounds();
 		}
 		
 		public void SetPause(bool isPaused)
