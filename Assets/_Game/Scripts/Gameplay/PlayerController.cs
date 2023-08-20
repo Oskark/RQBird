@@ -1,12 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using Gameplay;
 using Gameplay.Levels;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _Rigidbody;
+
+    [SerializeField] private InputManager _InputManager;
 
     public event Action OnPlayerHitSegment;
     
@@ -48,23 +49,29 @@ public class PlayerController : MonoBehaviour
     void HandleInput()
     {
         // TODO: Obtain inputs from device
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (_InputManager.WasJump)
         {
             _Rigidbody.AddForce(Vector3.up * 15f, ForceMode.VelocityChange);
         }
-        
-        if (Input.GetKey(KeyCode.A))
+
+        var slideChanged = _InputManager.SlideChange;
+        if (slideChanged < 0)
         {
-            if (_Rigidbody.velocity.x > 0) _Rigidbody.velocity = new Vector3(0, _Rigidbody.velocity.y, _Rigidbody.velocity.z);
+            if ( _Rigidbody.velocity.x > 0 ) ResetHorizontalVelocity();
             
             _Rigidbody.AddForce(Vector3.left * 5);
         }
         
-        if (Input.GetKey(KeyCode.D))
+        if (slideChanged > 0)
         {
-            if (_Rigidbody.velocity.x < 0) _Rigidbody.velocity = new Vector3(0, _Rigidbody.velocity.y, _Rigidbody.velocity.z);
+            if ( _Rigidbody.velocity.x < 0 ) ResetHorizontalVelocity();
             _Rigidbody.AddForce(Vector3.right * 5);
         }
         
+    }
+
+    private void ResetHorizontalVelocity()
+    {
+        _Rigidbody.velocity = _Rigidbody.velocity.With( x: 0 );
     }
 }

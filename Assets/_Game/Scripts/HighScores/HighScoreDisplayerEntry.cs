@@ -13,6 +13,6 @@ public class HighScoreDisplayerEntry : MonoBehaviour
 	{
 		_NumberText.text = number.ToString();
 		_Score.text = entry.Score.ToString();
-		_Time.text = TimeSpan.FromTicks( (long) entry.ObtainDate ).ToString( );	
+		_Time.text = new DateTime( (long) entry.ObtainDate ).ToString(  );	
 	}
 }
