@@ -47,27 +47,19 @@ namespace Gameplay
 		private float _currentKeyboardSlide = 0;
 		private float ReadKeyboardSlide()
 		{
-			if (Input.GetKey(KeyCode.A))
+			if  (Input.GetKey(KeyCode.A) )
 			{
-				if ( _currentKeyboardSlide > 0 )
-				{
-					_currentKeyboardSlide = 0;
-				}
-				else
-				{
-					_currentKeyboardSlide -= Time.deltaTime * 2f;
-				}
+				var  wasMovingRight = _currentKeyboardSlide > 0;
+				if ( wasMovingRight ) _currentKeyboardSlide = 0;
+				
+				_currentKeyboardSlide -= Time.deltaTime * 2f;
 			}
 			else if ( Input.GetKey( KeyCode.D ) )
 			{
-				if (_currentKeyboardSlide < 0)
-				{
-					_currentKeyboardSlide = 0;
-				}
-				else
-				{
-					_currentKeyboardSlide += Time.deltaTime * 2f;
-				}
+				var wasMovingLeft = _currentKeyboardSlide < 0;
+				if (wasMovingLeft) _currentKeyboardSlide = 0;
+			
+				_currentKeyboardSlide += Time.deltaTime * 2f;
 			}
 			else
 			{
