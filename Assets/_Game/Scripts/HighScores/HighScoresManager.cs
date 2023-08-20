@@ -64,8 +64,8 @@ public class HighScoresManager : ScriptableObject, IHighScorable
 				_HighScores.RemoveAt( _HighScores.Count - 1 );
 			}
 			
-			// TODO: Await this?
-			HighScoresSaveLoad.SaveScores( _HighScores );
+			
+			HighScoresSaveLoad.SaveScores( _HighScores ).Forget();
 
 			position = highScorePosition;
 			lowestHighScoreValue = -1;
