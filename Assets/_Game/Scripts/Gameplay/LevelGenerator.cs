@@ -100,7 +100,7 @@ namespace Gameplay.Levels
 			if ( isFirstObstacle )
 			{
 				var firstFloorSegment = _spawnedFloorSegments[0];
-				obstacleSpawnPosition = firstFloorSegment.transform.position + Vector3.forward * firstFloorSegment.GetZLength();
+				obstacleSpawnPosition = firstFloorSegment.transform.position + Vector3.forward * (firstFloorSegment.GetZLength() * 2);
 			}
 			else
 			{
