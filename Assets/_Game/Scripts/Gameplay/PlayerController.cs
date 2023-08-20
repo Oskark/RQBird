@@ -40,14 +40,6 @@ public class PlayerController : MonoBehaviour
             _Rigidbody.velocity = _Rigidbody.velocity.With( y: 0 );
             transform.position = transform.position.With( y: TOO_HIGH );
         }
-
-        // const float TOO_LEFT_OR_RIGHT = 3f;
-        // var isTooLeftOrRight = Mathf.Abs(transform.position.x) >= TOO_LEFT_OR_RIGHT;
-        // if ( isTooLeftOrRight )
-        // {
-        //     ResetHorizontalVelocity();
-        //     transform.position = transform.position.With( x: Mathf.Sign(transform.position.x) * TOO_LEFT_OR_RIGHT );
-        // }
     }
 
     private float? _lastPositionX = null;
@@ -69,8 +61,6 @@ public class PlayerController : MonoBehaviour
             var targetPos = currentPos + slideChanged;
 
             targetPos = Mathf.Clamp( targetPos, -1f, 1 );
-            
-            Debug.Log($"Setting position from {levelBounds.left} - {levelBounds.right} to perc {targetPos}"  );
             
             _Rigidbody.position = _Rigidbody.position.With( x: Mathf.Lerp( levelBounds.left, levelBounds.right, targetPos ) );
         }
