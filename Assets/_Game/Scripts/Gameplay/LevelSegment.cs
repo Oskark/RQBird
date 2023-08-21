@@ -1,6 +1,7 @@
 ﻿
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace Gameplay.Levels
 {
@@ -16,27 +17,49 @@ namespace Gameplay.Levels
 		[SerializeField] private Collider _Collider;
 		[SerializeField] private float _DistanceRemovalThreshold = 10f;
 
-		private LevelManager _levelManager;
+		[Inject] private LevelManager _levelManager;
+		[Inject] private GameInstaller _gameInstaller;
+
 		private bool _isPaused = false;
 		
 		private Action<LevelSegment> _onElementDestroyed;
 
-		// [Inject]
-		public void Construct( LevelManager levelManagerable )
+		[Inject]
+		public void Construct( LevelManager _LevelManager, GameInstaller gameInstaller )
 		{
-			_levelManager = levelManagerable;
+			_levelManager = _LevelManager;
+			_gameInstaller = gameInstaller;
+			
+			Debug.Log( "Construct success!" );
 		}
+
 		
-		public void Init( LevelManager levelManager, Action<LevelSegment> onElementDestroyed )
+		private void Start()
 		{
-			_levelManager = levelManager;
+			if ( _levelManager == null )
+			{
+				Debug.LogError( $"No levelMAnager on {name}" );
+			}
+			
+			if ( _gameInstaller == null )
+			{
+				Debug.LogError( $"No _gameInstaller on {name}" );
+			}
+		}
+
+		public void Init( Action<LevelSegment> onElementDestroyed )
+		{
 			_onElementDestroyed = onElementDestroyed;
 		}
 		
 		private void Update()
 		{
 			if ( _isPaused ) return;
-			
+
+			if ( _levelManager == null )
+			{
+				return;
+			}
 			transform.position += Vector3.back * (Time.deltaTime * _Speed * _levelManager.SpeedModifier);
 
 			if ( transform.position.z < -_DistanceRemovalThreshold )

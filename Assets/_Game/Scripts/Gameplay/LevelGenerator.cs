@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace Gameplay.Levels
 {
 	public class LevelGenerator : MonoBehaviour
 	{
 		
-		[SerializeField] private LevelManager _LevelManager;
-        
 		[SerializeField] private bool _isPaused = false;
 		
 		[SerializeField] private LevelSegment[] _LevelSegments;
 		[SerializeField] private LevelSegment _FloorSegment;
 
 		[SerializeField] private Transform _SpawnContainer;
-        
+
+		[Inject] private GameInstaller _gameInstaller;
         
 		private Transform _PlayerTransform;
 		private float _distancePassed = 0;
@@ -63,8 +63,13 @@ namespace Gameplay.Levels
 
 		private void SpawnFloorAt( Vector3 newSpawnPosition )
 		{
-			var newFloor = Instantiate(_FloorSegment, newSpawnPosition, Quaternion.identity, _SpawnContainer);
-			newFloor.Init(_LevelManager, OnFloorDestroyed);
+			// var newFloor = Instantiate(_FloorSegment, newSpawnPosition, Quaternion.identity, _SpawnContainer);
+			var newFloor = _gameInstaller.SpawnInjectableObject( _FloorSegment.gameObject ).GetComponent<LevelSegment>();
+			newFloor.transform.position = newSpawnPosition;
+			newFloor.transform.rotation = Quaternion.identity;
+			newFloor.transform.SetParent( _SpawnContainer );
+			
+			newFloor.Init(OnFloorDestroyed);
 			newFloor.SetPause( _isPaused );
 			_spawnedFloorSegments.Add(newFloor);
 		}
@@ -114,8 +119,13 @@ namespace Gameplay.Levels
 		private void SpawnObstacleAt( LevelSegment randomObstacle, Vector3 obstacleSpawnPosition )
 		{
 			var spawnPosition = obstacleSpawnPosition + randomObstacle.SpawnOffset;
-			var newObstacle = Instantiate(randomObstacle, spawnPosition, Quaternion.identity, _SpawnContainer);
-			newObstacle.Init( _LevelManager, OnObstacleDestroyed );
+			// var newObstacle = Instantiate(randomObstacle, spawnPosition, Quaternion.identity, _SpawnContainer);
+			var newObstacle = _gameInstaller.SpawnInjectableObject( randomObstacle.gameObject ).GetComponent<LevelSegment>();
+			newObstacle.transform.position = spawnPosition;
+			newObstacle.transform.rotation = Quaternion.identity;
+			newObstacle.transform.SetParent( _SpawnContainer );
+			
+			newObstacle.Init( OnObstacleDestroyed );
 			newObstacle.SetPause( _isPaused );
 			
 			_spawnedObstacles.Add(newObstacle);

@@ -9,7 +9,7 @@ namespace Gameplay.Levels
 		
 		public (float left, float right) GetLevelBounds(); 
 	}
-	public class LevelManager : MonoBehaviour, ILevelManagerable
+	public class LevelManager : MonoBehaviour
 	{
 		[Header("Neccessary refs")]
 		[SerializeField] private LevelGenerator _LevelGenerator;

@@ -2,17 +2,23 @@ using System;
 using Gameplay;
 using Gameplay.Levels;
 using UnityEngine;
+using Zenject;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _Rigidbody;
-    [SerializeField] private LevelManager _LevelManager;
-    [SerializeField] private InputManager _InputManager;
-
+    
+    [Inject] private InputManager _inputManager;
+    [Inject] private LevelManager _LevelManager;
+    [Inject] private GameplayData _gameplayData;
+    
     public event Action OnPlayerHitSegment;
 
     private bool _isPaused = false;
     
+    private float? _lastPositionX = null;
+
+
     private void Update()
     {
         if ( _isPaused ) return;
@@ -31,36 +37,33 @@ public class PlayerController : MonoBehaviour
 
     private void HandleBoundaries()
     {
-        // TODO: Obtain from proper place
-        const float TOO_HIGH = 10f;
+        float ceilingHeight = _gameplayData.CeilingHeight;
         
-        var  isTooHigh = transform.position.y >= TOO_HIGH;
+        var  isTooHigh = transform.position.y >= ceilingHeight;
         if ( isTooHigh )
         {
             _Rigidbody.velocity = _Rigidbody.velocity.With( y: 0 );
-            transform.position = transform.position.With( y: TOO_HIGH );
+            _Rigidbody.position = _Rigidbody.position.With( y: ceilingHeight );
         }
     }
 
-    private float? _lastPositionX = null;
     void HandleInput()
     {
-        // TODO: Obtain inputs from device
-        if (_InputManager.WasJump)
+        if (_inputManager.WasJump)
         {
             if (_Rigidbody.velocity.y < 0) _Rigidbody.velocity = _Rigidbody.velocity.With( y: 0 );
             
-            _Rigidbody.AddForce(Vector3.up * 10f, ForceMode.VelocityChange);
+            _Rigidbody.AddForce(Vector3.up * _gameplayData.PlayerJumpStrength, ForceMode.VelocityChange);
         }
 
-        var slideChanged = _InputManager.SlideChange;
+        var slideChanged = _inputManager.SlideChange;
         if (slideChanged != 0)
         {
             if (_lastPositionX == null) _lastPositionX = _Rigidbody.position.x;
             
             var levelBounds = _LevelManager.GetLevelBounds();
             var currentPos = Mathf.InverseLerp( levelBounds.left, levelBounds.right, _lastPositionX.Value );
-            var targetPos = currentPos + slideChanged;
+            var targetPos = currentPos + (slideChanged * _gameplayData.PlayerHorizontalSpeed);
 
             targetPos = Mathf.Clamp( targetPos, -1f, 1 );
             
