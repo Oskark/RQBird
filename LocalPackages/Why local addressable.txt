@@ -1,0 +1,1 @@
+Due Unity Addressables Missing GUI style bug it was neccessary to modify local package content to fix it. Unity is aware of this problem since July, but still there aren't any working fix from they. 

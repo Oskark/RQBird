@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: RemoteGroup
+  m_EditorClassIdentifier: 
+  m_GroupName: RemoteGroup
+  m_Data:
+    m_SerializedData: []
+  m_GUID: d481d45f294ce834f90e5dc7684341f2
+  m_SerializeEntries:
+  - m_GUID: b227b5e357fcb824c86c6063fa4ecf75
+    m_Address: Assets/_Game/ScriptableObjects/GameplayElementsContainer.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 282fa1f625b4f9e42a42d383d0bfba7b
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Bottom.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa2c158a35b261e4ba2fd5d265c0e7ac
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Top.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80e080bf3e85db74ba4e1bb244283dde
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Right.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 178d8dde783a7284691616f93dbb48f3
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Left.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f990bd8687612d245a5bcd162f7176c5
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Top_Bottom.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c56b455cdee375419a6e17ccca0957a
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Left_Right.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1f2b6b0411fc31e40ab0b098f953cd7c
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Floor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8b7b1ec35c802604eb34a71bf36d22ec, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 77e16d91aae92fa46bfcd58f805085fb, type: 2}
+    - {fileID: 11400000, guid: 74ef755d788b72e4aab46575830ce1e8, type: 2}
