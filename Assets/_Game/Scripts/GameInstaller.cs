@@ -4,26 +4,31 @@ using Zenject;
 
 namespace Gameplay.Levels
 {
-	public class GameInstaller : MonoInstaller
+
+	public interface ISpawnInjectable
+	{
+		GameObject SpawnInjectableObject( GameObject prefab );
+	}
+	
+	public class GameInstaller : MonoInstaller, ISpawnInjectable
 	{
 		[SerializeField] private GameplayData _GameplayData;
 		[SerializeField] private InputManager _InputManager;
 		[SerializeField] private LevelManager _LevelManager;
+		[SerializeField] private LevelGenerator _LevelGenerator;
 
 		[SerializeField] private GameInstaller _GameInstaller;
-
-		// private PrefabFactory<LevelSegment> _SegmentFactory = new PrefabFactory<LevelSegment>();
-		
+        
 		public override void InstallBindings()
 		{
 			Container.BindInstance( _GameplayData ).AsSingle();
 			Container.BindInstance( _InputManager ).AsSingle();
 			Container.BindInstance( _LevelManager ).AsSingle();
+			Container.BindInstance( _LevelGenerator ).AsSingle();
 			
 			Container.BindInstance( _GameInstaller ).AsSingle();
-
-			
-		}
+			Container.Bind<ISpawnInjectable>().FromInstance( _GameInstaller ).AsSingle();
+        }
 
 		public GameObject SpawnInjectableObject( GameObject prefab )
 		{

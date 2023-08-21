@@ -16,12 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: b383463ae9762eb459096079766d6652
-  m_SerializeEntries:
-  - m_GUID: 1f2b6b0411fc31e40ab0b098f953cd7c
-    m_Address: Assets/Scenes/_Game/Prefabs/Floor.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8b7b1ec35c802604eb34a71bf36d22ec, type: 2}
   m_SchemaSet:

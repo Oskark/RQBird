@@ -10,37 +10,39 @@ namespace Gameplay.Levels
 		
 		[SerializeField] private bool _isPaused = false;
 		
+		[Inject] private GameplayElementsProvider _gameplayElementsProvider;
+		
 		[SerializeField] private LevelSegment[] _LevelSegments;
 		[SerializeField] private LevelSegment _FloorSegment;
 
 		[SerializeField] private Transform _SpawnContainer;
-
-		[Inject] private GameInstaller _gameInstaller;
         
-		private Transform _PlayerTransform;
-		private float _distancePassed = 0;
+		
+		[Inject] private GameInstaller _gameInstaller;
 		
 		private List<LevelSegment> _spawnedFloorSegments = new List<LevelSegment>();
 		private List<LevelSegment> _spawnedObstacles = new List<LevelSegment>();
 
 		private Action _onObstaclePassed;
 
-
-		private void Start()
+		
+		
+		public void GenerateLevel()
 		{
 			SpawnFloors(  10 );
-			SpawnObstacles( 10 );
+			SpawnObstacles( 10 );	
 		}
+
+		// private void Start()
+		// {
+		// 	SpawnFloors(  10 );
+		// 	SpawnObstacles( 10 );
+		// }
 
 		void Update()
 		{
 			if (_isPaused) return;
         }
-
-		public void UpdateCurrentDistance( float distancePassed )
-		{
-			_distancePassed = distancePassed;
-		}
 
 		#region Floors
 
@@ -56,7 +58,8 @@ namespace Gameplay.Levels
 		{
 			var lastFloor = _spawnedFloorSegments.Count == 0 ? null : _spawnedFloorSegments[^1];
 
-			var newSpawnPosition = lastFloor == null ? Vector3.zero : lastFloor.transform.position + Vector3.forward * lastFloor.GetZLength();
+			var isFirstSegment = lastFloor == null;
+			var newSpawnPosition = isFirstSegment ? Vector3.zero : lastFloor.transform.position + Vector3.forward * lastFloor.GetZLength();
 				
 			SpawnFloorAt(newSpawnPosition);
 		}
@@ -64,7 +67,8 @@ namespace Gameplay.Levels
 		private void SpawnFloorAt( Vector3 newSpawnPosition )
 		{
 			// var newFloor = Instantiate(_FloorSegment, newSpawnPosition, Quaternion.identity, _SpawnContainer);
-			var newFloor = _gameInstaller.SpawnInjectableObject( _FloorSegment.gameObject ).GetComponent<LevelSegment>();
+			// var newFloor = _gameInstaller.SpawnInjectableObject( _FloorSegment.gameObject ).GetComponent<LevelSegment>();
+			var newFloor = _gameplayElementsProvider.GetFloor();
 			newFloor.transform.position = newSpawnPosition;
 			newFloor.transform.rotation = Quaternion.identity;
 			newFloor.transform.SetParent( _SpawnContainer );
@@ -76,6 +80,8 @@ namespace Gameplay.Levels
 
 		private void OnFloorDestroyed( LevelSegment segment )
 		{
+			_gameplayElementsProvider.ReturnSegment( segment );
+			
 			_spawnedFloorSegments.Remove(segment);
 			
 			SpawnNewFloorSegmentAtTheEnd();
@@ -100,7 +106,6 @@ namespace Gameplay.Levels
 			var isFirstObstacle = lastObstacle == null;
 
 			Vector3 obstacleSpawnPosition;
-			var randomObstacle = _LevelSegments.RandomElement();
 			
 			if ( isFirstObstacle )
 			{
@@ -109,18 +114,20 @@ namespace Gameplay.Levels
 			}
 			else
 			{
-				obstacleSpawnPosition = CalculateNewPositionFromLastObstacle( lastObstacle, randomObstacle );
+				obstacleSpawnPosition = CalculateNewPositionFromLastObstacle( lastObstacle );
 			}
 			
 				
-			SpawnObstacleAt(randomObstacle, obstacleSpawnPosition);
+			SpawnObstacleAt( obstacleSpawnPosition);
 		}
 
-		private void SpawnObstacleAt( LevelSegment randomObstacle, Vector3 obstacleSpawnPosition )
+		private void SpawnObstacleAt( Vector3 obstacleSpawnPosition )
 		{
-			var spawnPosition = obstacleSpawnPosition + randomObstacle.SpawnOffset;
+			var newObstacle = _gameplayElementsProvider.GetRandomSegment();
+			
+			var spawnPosition = obstacleSpawnPosition + newObstacle.SpawnOffset;
 			// var newObstacle = Instantiate(randomObstacle, spawnPosition, Quaternion.identity, _SpawnContainer);
-			var newObstacle = _gameInstaller.SpawnInjectableObject( randomObstacle.gameObject ).GetComponent<LevelSegment>();
+			// var newObstacle = _gameInstaller.SpawnInjectableObject( randomObstacle.gameObject ).GetComponent<LevelSegment>();
 			newObstacle.transform.position = spawnPosition;
 			newObstacle.transform.rotation = Quaternion.identity;
 			newObstacle.transform.SetParent( _SpawnContainer );
@@ -131,16 +138,18 @@ namespace Gameplay.Levels
 			_spawnedObstacles.Add(newObstacle);
 		}
 
-		private void OnObstacleDestroyed( LevelSegment obj )
+		private void OnObstacleDestroyed( LevelSegment segment )
 		{
 			_onObstaclePassed?.Invoke();
-			_spawnedObstacles.Remove(obj);
+			_gameplayElementsProvider.ReturnSegment( segment );
+
+			_spawnedObstacles.Remove(segment);
 			
 			SpawnNewObstacleSegmentAtTheEnd();
 		}
 
 
-		private Vector3 CalculateNewPositionFromLastObstacle( LevelSegment lastObstacle, LevelSegment randomObstacle )
+		private Vector3 CalculateNewPositionFromLastObstacle( LevelSegment lastObstacle )
 		{
 			// TODO: Implement this
 			return lastObstacle.transform.position + Vector3.forward * 10f - lastObstacle.SpawnOffset;
@@ -170,6 +179,7 @@ namespace Gameplay.Levels
 			
 			return _FloorSegment.GetLeftRightBounds();
 		}
+
 	}
  
 }

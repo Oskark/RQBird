@@ -1,6 +1,10 @@
-﻿using Gameplay.UI;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Gameplay.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 namespace Gameplay.Levels
 {
@@ -12,6 +16,8 @@ namespace Gameplay.Levels
 
 		[SerializeField] private GameplayHUD _GameplayHUD;
 
+		[Inject] private GameplayElementsProvider _GameplayElementsProvider;
+
 		private void Awake()
 		{
 			Application.targetFrameRate = 60;
@@ -22,12 +28,36 @@ namespace Gameplay.Levels
 			PrepareGame();
 		}
 
-		private void PrepareGame()
+		private void OnDestroy()
+		{
+			if ( _GameplayElementsProvider != null )
+			{
+				_GameplayElementsProvider.Clear ();
+			}
+		}
+
+		private async void PrepareGame()
 		{
 			FreezePlayer();
 			FreezeLevel();
 
+			await PreloadMapIfNeeded();
+
+			GenerateLevel();
+			
 			StartCountdown();
+		}
+
+		[Inject] private GameInstaller _gameInstaller;
+		private async Task PreloadMapIfNeeded()
+		{
+			await _GameplayElementsProvider.PreloadElements( 
+					spawnFunc:	element => _gameInstaller.SpawnInjectableObject( element ).GetComponent<LevelSegment>() );
+		}
+
+		private void GenerateLevel()
+		{
+			_LevelManager.GenerateLevel();
 		}
 
 		private void FreezePlayer()

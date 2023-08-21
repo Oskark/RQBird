@@ -1,45 +1,48 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
+using Zenject;
 
 namespace Gameplay.Levels
 {
-	public interface ILevelManagerable
-	{
-		public float SpeedModifier { get; }
-		
-		public (float left, float right) GetLevelBounds(); 
-	}
 	public class LevelManager : MonoBehaviour
 	{
-		[Header("Neccessary refs")]
-		[SerializeField] private LevelGenerator _LevelGenerator;
+		[Inject] private GameplayData _gameplayData;
 
+		[Inject] private LevelGenerator _LevelGenerator;
+        
 		
-		[Header("Settings")]
-		[SerializeField] private float _SpeedPerSec = 1f;
-		[SerializeField] private float _AccelerationPerSec = 0.1f;
-
+		public float DistancePassed => _distancePassed;
+		public float CurrentSpeed => _basePlayerSpeed + _accelerationPerAdvance * _accelerationsAmount;
+		
+		private int _obstaclesPassed = 0;
+		private int _accelerationsAmount = 0;
+		
 		private float _distancePassed = 0;
 		private bool _isPaused = false;
-
-		public float DistancePassed => _distancePassed;
-		public float SpeedModifier => _SpeedPerSec + _AccelerationPerSec * _currentAccelerations;
 		
-		private int _accelerationsCount = 0;
-		private readonly int _accelerationsCountToIncreaseSpeed = 3;
-		private int _currentAccelerations = 0;
+		private int _accelerationsCountToIncreaseSpeed;
+		private float _basePlayerSpeed;
+		private float _accelerationPerAdvance;
 
 		private void Start()
 		{
+			_accelerationsCountToIncreaseSpeed = _gameplayData.ObstaclesPassedToAccelerate;
+			_basePlayerSpeed = _gameplayData.PlayerMoveSpeed;
+			_accelerationPerAdvance = _gameplayData.AccelerationPerAdvance;
+
 			_LevelGenerator.Init(OnObstaclePassed);
 		}
 
 		private void OnObstaclePassed()
 		{
-			_accelerationsCount++;
-			if (_accelerationsCount % _accelerationsCountToIncreaseSpeed == 0)
+			_obstaclesPassed++;
+			Debug.Log($"Obstacle passed. Current: {_obstaclesPassed}"  );
+
+			if (_obstaclesPassed % _accelerationsCountToIncreaseSpeed == 0)
 			{
-				_currentAccelerations++;
+				_accelerationsAmount++;
+				Debug.Log($"Obstacle passed. New acceleration: {_accelerationsAmount}"  );
 			}
 		}
 
@@ -48,7 +51,6 @@ namespace Gameplay.Levels
 			if (_isPaused) return;
 
 			UpdateDistancePassed();
-			ApplyCurrentDistanceToLevelGenerator();
 		}
 		
 		public (float left, float right) GetLevelBounds()
@@ -64,15 +66,14 @@ namespace Gameplay.Levels
 		}
 
 
-
-		private void ApplyCurrentDistanceToLevelGenerator()
-		{
-			_LevelGenerator.UpdateCurrentDistance(_distancePassed);
-		}
-
 		private void UpdateDistancePassed()
 		{
-			_distancePassed += _SpeedPerSec * Time.deltaTime;
+			_distancePassed += _basePlayerSpeed * Time.deltaTime;
+		}
+
+		public void GenerateLevel()
+		{
+			_LevelGenerator.GenerateLevel();
 		}
 	}
 }

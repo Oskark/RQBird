@@ -1,6 +1,7 @@
 ﻿
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Zenject;
 
 namespace Gameplay.Levels
@@ -21,16 +22,14 @@ namespace Gameplay.Levels
 		[Inject] private GameInstaller _gameInstaller;
 
 		private bool _isPaused = false;
-		
+		public AssetReferenceGameObject OriginAssetRef { get; private set; }
+
 		private Action<LevelSegment> _onElementDestroyed;
 
 		[Inject]
-		public void Construct( LevelManager _LevelManager, GameInstaller gameInstaller )
+		public void Construct( LevelManager _LevelManager )
 		{
 			_levelManager = _LevelManager;
-			_gameInstaller = gameInstaller;
-			
-			Debug.Log( "Construct success!" );
 		}
 
 		
@@ -51,6 +50,17 @@ namespace Gameplay.Levels
 		{
 			_onElementDestroyed = onElementDestroyed;
 		}
+
+		public void SetMyAssetRef( AssetReferenceGameObject asset )
+		{
+			OriginAssetRef = asset;
+		}
+
+		public void ResetData()
+		{
+			_isPaused = false;
+			_onElementDestroyed = null;
+		}
 		
 		private void Update()
 		{
@@ -60,13 +70,11 @@ namespace Gameplay.Levels
 			{
 				return;
 			}
-			transform.position += Vector3.back * (Time.deltaTime * _Speed * _levelManager.SpeedModifier);
+			transform.position += Vector3.back * (Time.deltaTime * _Speed * _levelManager.CurrentSpeed);
 
 			if ( transform.position.z < -_DistanceRemovalThreshold )
 			{
 				_onElementDestroyed?.Invoke(this);
-				
-				Destroy( gameObject );
 			}
 		}
 
