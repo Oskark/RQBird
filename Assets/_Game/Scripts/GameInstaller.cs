@@ -12,7 +12,6 @@ namespace Gameplay.Levels
 	
 	public class GameInstaller : MonoInstaller, ISpawnInjectable
 	{
-		[SerializeField] private GameplayData _GameplayData;
 		[SerializeField] private InputManager _InputManager;
 		[SerializeField] private LevelManager _LevelManager;
 		[SerializeField] private LevelGenerator _LevelGenerator;
@@ -23,7 +22,6 @@ namespace Gameplay.Levels
 		
 		public override void InstallBindings()
 		{
-			Container.BindInstance( _GameplayData ).AsSingle();
 			Container.BindInstance( _InputManager ).AsSingle();
 			Container.BindInstance( _LevelManager ).AsSingle();
 			Container.BindInstance( _LevelGenerator ).AsSingle();

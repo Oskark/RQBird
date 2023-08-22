@@ -7,6 +7,9 @@ using Zenject;
 [CreateAssetMenu(fileName = "ScriptableObjectInstaller", menuName = "Installers/ScriptableObjectInstaller")]
 public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstaller>
 {
+
+    [SerializeField] private GameplayData _GameplayData;
+    
     [SerializeField] private AssetReference _ElementsContainerRef;
     [SerializeField] private HighScoresManager _HighScoresManager;
     
@@ -29,6 +32,7 @@ public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstall
         Container.Bind<ScriptablesInstaller>().FromScriptableObject( this ).AsSingle();
         Container.Bind<GameplayElementsProvider>( ).FromNew().AsSingle();
         Container.BindInstance( _ElementsContainerRef ).WithId( "ElementsContainerRef" );
+        Container.BindInstance( _GameplayData ).AsSingle();
 
         Container.BindInstance( _HighScoresManager ).AsSingle();
         

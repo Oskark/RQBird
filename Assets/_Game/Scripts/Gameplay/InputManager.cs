@@ -6,33 +6,20 @@ using Zenject;
 
 namespace Gameplay
 {
-	
-	public interface IInputManagerable
-	{
-		public bool WasJump { get; }
-		public float SlideChange { get; }
-	}
-	
-	public class InputManager : MonoBehaviour, IInputManagerable
+	public class InputManager : MonoBehaviour
 	{
 		
 		public bool WasJump { get; private set; }
 		public float SlideChange { get; private set; }
-        
-		public bool IsPaused { get; set; }
+
+		private bool IsPaused { get; set; }
 
 		private bool _JumpFromTouchWasPressed = false;
 		private float _LastSlideChanged = 0;
 
 		private SignalBus _signalBus;
 		
-		
-		[Inject]
-		public void Construct( SignalBus signalBus )
-		{
-			_signalBus = signalBus;
-			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameStateChanged );
-		}
+
 
 
 		protected void Awake()
@@ -48,6 +35,14 @@ namespace Gameplay
 		{
 			_signalBus.Unsubscribe<GameplayStateChangedSignal>( OnGameStateChanged );
 		}
+        
+		[Inject]
+		public void Construct( SignalBus signalBus )
+		{
+			_signalBus = signalBus;
+			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+		}
+		
 
 		private void OnGameStateChanged( GameplayStateChangedSignal newGameState )
 		{
