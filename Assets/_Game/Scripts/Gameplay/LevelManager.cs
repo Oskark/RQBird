@@ -38,7 +38,6 @@ namespace Gameplay.Levels
 		[Inject]
 		public void Construct( SignalBus signalBus )
 		{
-			Debug.Log($"Construct with signal bus: {signalBus}"  );
 			_signalBus = signalBus;
 			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameStateChanged );
 		}
@@ -55,12 +54,10 @@ namespace Gameplay.Levels
 		private void OnObstaclePassed()
 		{
 			_obstaclesPassed++;
-			Debug.Log($"Obstacle passed. Current: {_obstaclesPassed}"  );
-
+            
 			if (_obstaclesPassed % _accelerationsCountToIncreaseSpeed == 0)
 			{
 				_accelerationsAmount++;
-				Debug.Log($"Obstacle passed. New acceleration: {_accelerationsAmount}"  );
 			}
 		}
 
@@ -94,8 +91,6 @@ namespace Gameplay.Levels
 
 		public void Initialize()
 		{
-			Debug.Log($"Initialize LevelManager"  );
-			// _signalBus.Subscribe( typeof(GameplayStateChangedSignal), NewState );
 		}
 
 

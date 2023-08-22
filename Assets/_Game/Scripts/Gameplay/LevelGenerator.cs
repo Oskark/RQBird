@@ -50,16 +50,13 @@ namespace Gameplay.Levels
 
 		private void SpawnFloorAt( Vector3 newSpawnPosition )
 		{
-			// var newFloor = Instantiate(_FloorSegment, newSpawnPosition, Quaternion.identity, _SpawnContainer);
-			// var newFloor = _gameInstaller.SpawnInjectableObject( _FloorSegment.gameObject ).GetComponent<LevelSegment>();
 			var newFloor = _gameplayElementsProvider.GetFloor();
 			newFloor.transform.position = newSpawnPosition;
 			newFloor.transform.rotation = Quaternion.identity;
 			newFloor.transform.SetParent( _SpawnContainer );
 			
 			newFloor.Init(OnFloorDestroyed);
-			// newFloor.SetPause( _isPaused );
-			_spawnedFloorSegments.Add(newFloor);
+            _spawnedFloorSegments.Add(newFloor);
 		}
 
 		private void OnFloorDestroyed( LevelSegment segment )
@@ -110,15 +107,13 @@ namespace Gameplay.Levels
 			var newObstacle = _gameplayElementsProvider.GetRandomSegment();
 			
 			var spawnPosition = obstacleSpawnPosition + newObstacle.SpawnOffset;
-			// var newObstacle = Instantiate(randomObstacle, spawnPosition, Quaternion.identity, _SpawnContainer);
-			// var newObstacle = _gameInstaller.SpawnInjectableObject( randomObstacle.gameObject ).GetComponent<LevelSegment>();
+
 			newObstacle.transform.position = spawnPosition;
 			newObstacle.transform.rotation = Quaternion.identity;
 			newObstacle.transform.SetParent( _SpawnContainer );
 			
 			newObstacle.Init( OnObstacleDestroyed );
-			// newObstacle.SetPause( _isPaused );
-			
+            
 			_spawnedObstacles.Add(newObstacle);
 		}
 
