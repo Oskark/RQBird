@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3096bc22363313942b6bf70b700d015b, type: 3}
   m_Name: ScriptableObjectInstaller
   m_EditorClassIdentifier: 
+  _GameplayData: {fileID: 11400000, guid: ddb66de934169554f800fa92dc3df959, type: 2}
   _ElementsContainerRef:
     m_AssetGUID: b227b5e357fcb824c86c6063fa4ecf75
     m_SubObjectName: 
