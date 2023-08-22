@@ -19,6 +19,8 @@ namespace Gameplay.Levels
 
 		[SerializeField] private GameInstaller _GameInstaller;
         
+		[Inject] private static GameInstaller _Instance;
+		
 		public override void InstallBindings()
 		{
 			Container.BindInstance( _GameplayData ).AsSingle();
@@ -28,8 +30,17 @@ namespace Gameplay.Levels
 			
 			Container.BindInstance( _GameInstaller ).AsSingle();
 			Container.Bind<ISpawnInjectable>().FromInstance( _GameInstaller ).AsSingle();
-        }
 
+			_Instance = this;
+		}
+
+		
+		public static GameObject SpawnStatic( GameObject p )
+		{
+			return _Instance.SpawnInjectableObject( p );
+		} 
+
+		
 		public GameObject SpawnInjectableObject( GameObject prefab )
 		{
 			var p = Container.InstantiatePrefab( prefab );

@@ -12,14 +12,10 @@ namespace Gameplay.Levels
 		
 		[Inject] private GameplayElementsProvider _gameplayElementsProvider;
 		
-		[SerializeField] private LevelSegment[] _LevelSegments;
-		[SerializeField] private LevelSegment _FloorSegment;
 
 		[SerializeField] private Transform _SpawnContainer;
         
-		
-		[Inject] private GameInstaller _gameInstaller;
-		
+        
 		private List<LevelSegment> _spawnedFloorSegments = new List<LevelSegment>();
 		private List<LevelSegment> _spawnedObstacles = new List<LevelSegment>();
 
@@ -176,8 +172,8 @@ namespace Gameplay.Levels
 			{
 				return _spawnedFloorSegments[0].GetLeftRightBounds();
 			}
-			
-			return _FloorSegment.GetLeftRightBounds();
+
+			return _gameplayElementsProvider.GetFloorLeftRightSegment();
 		}
 
 	}

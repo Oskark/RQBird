@@ -10,6 +10,17 @@ public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstall
     
     public override void InstallBindings()
     {
+        
+
+        Container.Bind<ScriptablesInstaller>().FromScriptableObject( this ).AsSingle();
         Container.BindInstance( _ElementsProvider ).AsSingle();
+    }
+
+    public GameObject SpawnInjectableObject( GameObject gameObject )
+    {
+        var p = Container.InstantiatePrefab( gameObject );
+        Container.InjectGameObject( p );
+
+        return p;
     }
 }

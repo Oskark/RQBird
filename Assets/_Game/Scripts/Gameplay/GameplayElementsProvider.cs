@@ -19,8 +19,10 @@ namespace Gameplay
 	[CreateAssetMenu( fileName = "GameplayElementsProvider", menuName = "OneTimeScripts/GameplayElementsProvider" )]
 	public class GameplayElementsProvider : ScriptableObject
 	{
-		[SerializeField]
-		private AssetReference _ElementsContainerRef;
+		[SerializeField] private AssetReference _ElementsContainerRef;
+        
+		[Inject] private ScriptablesInstaller _SOInstaller;
+
 		private GameplayElementsContainer _elementsContainerInstance;
 		
 		private Dictionary<LevelSegmentRef, LevelSegment> _preloadedElements;
@@ -29,6 +31,14 @@ namespace Gameplay
 		private Transform _poolContainer;
 
 		private Func<GameObject, LevelSegment> _spawnFunc;
+		
+		private static bool _alreadyPreloaded = false;
+
+		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
+		private static void ResetStatics()
+		{
+			_alreadyPreloaded = false;
+		}
 		
 		public LevelSegment GetFloor()
 		{
@@ -52,11 +62,15 @@ namespace Gameplay
 
 		public async Task PreloadElements(Func<GameObject, LevelSegment> spawnFunc)
 		{
+			Debug.Log( $"Preload on instance {GetInstanceID()}" );
+			if (_alreadyPreloaded) return;
+			
 			_spawnFunc = spawnFunc;
 			_preloadedElements = new Dictionary<LevelSegmentRef, LevelSegment>();
 			_segmentsPool = new Dictionary<LevelSegmentRef, IObjectPool<LevelSegment>>();
 			_poolContainer = new GameObject("SegmentsPool").transform;
-
+			DontDestroyOnLoad( _poolContainer );
+			
 			if (_elementsContainerInstance == null)
 			{
 				var elementsContainerHandle = _ElementsContainerRef.LoadAssetAsync<GameplayElementsContainer>();
@@ -76,15 +90,18 @@ namespace Gameplay
 				
 			foreach ( var t in _elementsContainerInstance.LevelSegmentsAR )
 			{
-				if ( _preloadedElements.TryGetValue( t, out var value ) == false || value == null) 
-					allTasks.Add( PreloadElement(t) );
+				if ( _preloadedElements.TryGetValue( t, out var value ) == false || value == null)
+				{
+					allTasks.Add( PreloadElement( t ) );
+				}
 			}
 			
 			Debug.Log("All tasks awaited!"  );
 
 			if (allTasks.Count > 0)
 				await UniTask.WhenAll( allTasks);
-			
+
+			_alreadyPreloaded = true;
 			Debug.Log("All tasks completed!"  );
 			
 		}
@@ -113,7 +130,7 @@ namespace Gameplay
 				(
 					createFunc: () =>
 					{
-						var instance =  _spawnFunc.Invoke( _preloadedElements[_ref].gameObject ).GetComponent<LevelSegment>();
+						var instance = GameInstaller.SpawnStatic( _preloadedElements[_ref].gameObject ).GetComponent<LevelSegment>();
 						instance.transform.SetParent( _poolContainer );
 						instance.gameObject.SetActive( false );
 
@@ -171,7 +188,14 @@ namespace Gameplay
 				Addressables.ReleaseInstance( preloadedElementsValue.gameObject );
 			}
 			
+			Destroy( _poolContainer );
 			_preloadedElements.Clear();
+			_alreadyPreloaded = false;
+		}
+
+		public (float left, float right) GetFloorLeftRightSegment()
+		{
+			return _preloadedElements[_elementsContainerInstance.FloorSegmentAR].GetLeftRightBounds();
 		}
 	}
 }
