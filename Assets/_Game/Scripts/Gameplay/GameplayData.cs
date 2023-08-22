@@ -8,6 +8,7 @@ namespace Gameplay
 		[field: Header("PlayerConfig")]
 		[field: SerializeField] public float PlayerMoveSpeed { get; private set; } = 1f;
 		[field: SerializeField] public float PlayerHorizontalSpeed { get; private set; } = 1f;
+		[field: SerializeField] public float PlayerHorizontalSpeed_KeyboardSpeed { get; private set; } = 2f;
 		[field: SerializeField] public float PlayerJumpStrength { get; private set; } = 10f;
 
 		[field: Header("Map Settings")]

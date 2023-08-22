@@ -12,13 +12,15 @@ public class PlayerController : MonoBehaviour
     [Inject] private LevelManager _LevelManager;
     [Inject] private GameplayData _gameplayData;
     
-    
     public event Action OnPlayerHitSegment;
     
     private bool _isPaused = false;
     
     private float? _lastPositionX = null;
     private SignalBus _signalBus;
+
+    private float _leftBound;
+    private float _rightBound;
     
     [Inject]
     public void Construct( SignalBus signalBus )
@@ -37,15 +39,31 @@ public class PlayerController : MonoBehaviour
         var isFinished = newState.CurrentState == GameState.Result;
         if ( isFinished )
         {
-            _isPaused = false;
+            _isPaused = true;
             _Rigidbody.isKinematic = false; // Player can fall on failure
             
+            return;
+        }
+
+        var  isDuringCountdown = newState.CurrentState == GameState.Countdown;
+        if ( isDuringCountdown )
+        {
+            InitLevelData();
+            SetPause( isPaused: true );
             return;
         }
         
         var isPlaying = newState.CurrentState == GameState.Play;
         
         SetPause( isPlaying == false );
+    }
+
+    private void InitLevelData()
+    {
+        var levelBounds = _LevelManager.GetLevelBounds();
+        
+        _leftBound  = levelBounds.left;
+        _rightBound = levelBounds.right;
     }
 
     private void Update()
@@ -78,30 +96,60 @@ public class PlayerController : MonoBehaviour
 
     void HandleInput()
     {
-        if (_inputManager.WasJump)
+        var jumpWasPressed = _inputManager.WasJump;
+        if (jumpWasPressed)
         {
-            if (_Rigidbody.velocity.y < 0) _Rigidbody.velocity = _Rigidbody.velocity.With( y: 0 );
+            var wasFalling = _Rigidbody.velocity.y < 0;
+            if (wasFalling)
+            {
+                ResetFallingVelocity();
+            }
             
-            _Rigidbody.AddForce(Vector3.up * _gameplayData.PlayerJumpStrength, ForceMode.VelocityChange);
+            PerformJump();
         }
 
-        var slideChanged = _inputManager.SlideChange;
-        if (slideChanged != 0)
+        var slideChange = _inputManager.SlideChange;
+        var slideWasPresent = slideChange != 0;
+        
+        if (slideWasPresent)
         {
-            if (_lastPositionX == null) _lastPositionX = _Rigidbody.position.x;
-            
-            var levelBounds = _LevelManager.GetLevelBounds();
-            var currentPos = Mathf.InverseLerp( levelBounds.left, levelBounds.right, _lastPositionX.Value );
-            var targetPos = currentPos + (slideChanged * _gameplayData.PlayerHorizontalSpeed);
-
-            targetPos = Mathf.Clamp( targetPos, -1f, 1 );
-            
-            _Rigidbody.position = _Rigidbody.position.With( x: Mathf.Lerp( levelBounds.left, levelBounds.right, targetPos ) );
+            PerformSlide( slideChange );
         }
         else
         {
-            _lastPositionX = null;
+            RemoveLastPosition();
         }
+    }
+
+    private void PerformSlide( float slideChange )
+    {
+        if ( _lastPositionX == null ) _lastPositionX = _Rigidbody.position.x;
+
+        // Where are we in the level? [0..1]
+        var currentPos = Mathf.InverseLerp( _leftBound, _rightBound, _lastPositionX.Value );
+        // Where we should be in the level?
+        var targetPos = currentPos + (slideChange * _gameplayData.PlayerHorizontalSpeed);
+        // Clamp to [0..1]
+        targetPos = Mathf.Clamp( targetPos, -1f, 1 );
+        // Change to local pos
+        var newPosition = Mathf.Lerp( _leftBound, _rightBound, targetPos );
+        // Move
+        _Rigidbody.position = _Rigidbody.position.With( x: newPosition );
+    }
+    
+    private void RemoveLastPosition()
+    {
+        _lastPositionX = null;
+    }
+    
+    private void PerformJump()
+    {
+        _Rigidbody.AddForce( Vector3.up * _gameplayData.PlayerJumpStrength, ForceMode.VelocityChange );
+    }
+
+    private void ResetFallingVelocity()
+    {
+        _Rigidbody.velocity = _Rigidbody.velocity.With( y: 0 );
     }
 
     private void ResetHorizontalVelocity()

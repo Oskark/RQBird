@@ -1,13 +1,11 @@
-﻿
-using System;
-using Gameplay.Levels;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace Gameplay
 {
 	public class InputManager : MonoBehaviour
 	{
+		[Inject] private GameplayData _gameplayData;
 		
 		public bool WasJump { get; private set; }
 		public float SlideChange { get; private set; }
@@ -72,14 +70,14 @@ namespace Gameplay
 				var  wasMovingRight = _currentKeyboardSlide > 0;
 				if ( wasMovingRight ) _currentKeyboardSlide = 0;
 				
-				_currentKeyboardSlide -= Time.deltaTime * 2f;
+				_currentKeyboardSlide -= Time.deltaTime * _gameplayData.PlayerHorizontalSpeed_KeyboardSpeed;
 			}
 			else if ( Input.GetKey( KeyCode.D ) )
 			{
 				var wasMovingLeft = _currentKeyboardSlide < 0;
 				if (wasMovingLeft) _currentKeyboardSlide = 0;
 			
-				_currentKeyboardSlide += Time.deltaTime * 2f;
+				_currentKeyboardSlide += Time.deltaTime * _gameplayData.PlayerHorizontalSpeed_KeyboardSpeed;
 			}
 			else
 			{
