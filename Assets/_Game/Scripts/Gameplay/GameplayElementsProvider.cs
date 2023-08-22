@@ -126,7 +126,7 @@ namespace Gameplay
 			var success = handle.Status == AsyncOperationStatus.Succeeded;
 			var segment = handle.Result;
 
-			Addressables.Release( handle );
+			// Addressables.Release( handle );
 			if ( success )
 			{
 				var levelSegment = segment.GetComponent<LevelSegment>();
@@ -146,6 +146,7 @@ namespace Gameplay
 					actionOnGet: segment =>
 					{
 						segment.gameObject.SetActive( true );
+						segment.Activate();
 					},
 					actionOnRelease: segment =>
 					{

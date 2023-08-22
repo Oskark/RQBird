@@ -31,9 +31,7 @@ namespace Gameplay.Levels
 		public void Construct( LevelManager levelManager, SignalBus signalBus )
 		{
 			_levelManager = levelManager;
-			
 			_signalBus = signalBus;
-			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
             
 			Debug.Log($"Construct on {GetInstanceID()}"  );
 			
@@ -117,6 +115,11 @@ namespace Gameplay.Levels
 		{
 			var bc = _Collider as BoxCollider;
 			return (bc.bounds.min.x + 0.55f, bc.bounds.max.x - 0.5f); // TODO: take this value from proper place - player collider
+		}
+
+		public void Activate()
+		{
+			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
 		}
 	}
 }
