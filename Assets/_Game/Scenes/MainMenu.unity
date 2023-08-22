@@ -686,7 +686,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
   - {fileID: 11400000, guid: bab440eecf4f4a84589410b5530d91e9, type: 2}
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 702281892}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -1476,6 +1477,51 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &702281891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 702281893}
+  - component: {fileID: 702281892}
+  m_Layer: 0
+  m_Name: MainMenuInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &702281892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702281891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d927b0691796d41a511cff5c28f13b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _GameplayPreloader: {fileID: 1548111915}
+--- !u!4 &702281893
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702281891}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.48151073, y: 4.7249613, z: 1.2449992}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705378044
 GameObject:
   m_ObjectHideFlags: 0
@@ -3163,7 +3209,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _MaxDisplayedAmount: 20
-  _HighScoresManager: {fileID: 11400000, guid: 6cca9459514a47e45a8ac0272017621a, type: 2}
   _MainMenuController: {fileID: 1091771227}
   _SpawnContainer: {fileID: 589690058}
   _HighScoreEntryPrefab: {fileID: 8083136815955664758, guid: 785719c2b72b23444932f326429e751b,
@@ -3352,3 +3397,4 @@ SceneRoots:
   - {fileID: 1985723250}
   - {fileID: 1548111914}
   - {fileID: 279675949}
+  - {fileID: 702281893}

@@ -32,9 +32,6 @@ namespace Gameplay.Levels
 		{
 			_levelManager = levelManager;
 			_signalBus = signalBus;
-            
-			Debug.Log($"Construct on {GetInstanceID()}"  );
-			
 		}
 
 		private void OnGameplayStateChanged( GameplayStateChangedSignal newState )

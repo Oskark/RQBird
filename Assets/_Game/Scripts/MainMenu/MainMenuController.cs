@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -12,15 +13,24 @@ public class MainMenuController : MonoBehaviour
 
     [SerializeField] private HighScoresDisplayer _HighScoresDisplayer;
 
+    [Inject] private GameplayPreloader _gameplayPreloader;
 
     private void Awake()
     {
         Application.targetFrameRate = 60;
     }
 
+    private void Start()
+    {
+        _gameplayPreloader.BeginPreloading(  );
+    }
+
     public void Evt_StartGame()
     {
-        SceneManager.LoadScene( "Gameplay" );
+        _gameplayPreloader.MakeSurePreloadCompletedAndThen( () =>
+        {
+            SceneManager.LoadScene( "Gameplay" );
+        });
     }
     
     public void Evt_QuitGame()
