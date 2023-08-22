@@ -31,9 +31,13 @@ namespace Gameplay.Levels
 			Container.BindInstance( _GameInstaller ).AsSingle();
 			Container.Bind<ISpawnInjectable>().FromInstance( _GameInstaller ).AsSingle();
 
+			// SignalBusInstaller.Install( Container );
+			//
+			// Container.DeclareSignal<GameplayStateChangedSignal>();
+			
 			_Instance = this;
 		}
-
+        
 		
 		public static GameObject SpawnStatic( GameObject p )
 		{
@@ -44,7 +48,7 @@ namespace Gameplay.Levels
 		public GameObject SpawnInjectableObject( GameObject prefab )
 		{
 			var p = Container.InstantiatePrefab( prefab );
-			Container.InjectGameObject( p );
+			// Container.InjectGameObject( p );
 
 			return p;
 		}

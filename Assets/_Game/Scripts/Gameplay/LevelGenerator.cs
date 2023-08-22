@@ -7,9 +7,7 @@ namespace Gameplay.Levels
 {
 	public class LevelGenerator : MonoBehaviour
 	{
-		
-		[SerializeField] private bool _isPaused = false;
-		
+        
 		[Inject] private GameplayElementsProvider _gameplayElementsProvider;
 		
 
@@ -19,26 +17,15 @@ namespace Gameplay.Levels
 		private List<LevelSegment> _spawnedFloorSegments = new List<LevelSegment>();
 		private List<LevelSegment> _spawnedObstacles = new List<LevelSegment>();
 
-		private Action _onObstaclePassed;
+		public event Action OnObstaclePassed;
 
-		
-		
+
 		public void GenerateLevel()
 		{
 			SpawnFloors(  10 );
 			SpawnObstacles( 10 );	
 		}
-
-		// private void Start()
-		// {
-		// 	SpawnFloors(  10 );
-		// 	SpawnObstacles( 10 );
-		// }
-
-		void Update()
-		{
-			if (_isPaused) return;
-        }
+		
 
 		#region Floors
 
@@ -46,6 +33,7 @@ namespace Gameplay.Levels
 		{
 			for ( int i = 0; i < amount; i++ )
 			{
+				Debug.Log($"Spawning floor {i}"  );
 				SpawnNewFloorSegmentAtTheEnd();
 			}
 		}
@@ -70,7 +58,7 @@ namespace Gameplay.Levels
 			newFloor.transform.SetParent( _SpawnContainer );
 			
 			newFloor.Init(OnFloorDestroyed);
-			newFloor.SetPause( _isPaused );
+			// newFloor.SetPause( _isPaused );
 			_spawnedFloorSegments.Add(newFloor);
 		}
 
@@ -129,14 +117,15 @@ namespace Gameplay.Levels
 			newObstacle.transform.SetParent( _SpawnContainer );
 			
 			newObstacle.Init( OnObstacleDestroyed );
-			newObstacle.SetPause( _isPaused );
+			// newObstacle.SetPause( _isPaused );
 			
 			_spawnedObstacles.Add(newObstacle);
 		}
 
 		private void OnObstacleDestroyed( LevelSegment segment )
 		{
-			_onObstaclePassed?.Invoke();
+			OnObstaclePassed?.Invoke();
+			
 			_gameplayElementsProvider.ReturnSegment( segment );
 
 			_spawnedObstacles.Remove(segment);
@@ -152,19 +141,6 @@ namespace Gameplay.Levels
 		}
 
 		#endregion
-
-		public void Init( Action onObstaclePassed )
-		{
-			_onObstaclePassed = onObstaclePassed;
-		}
-
-		public void SetPause( bool isPaused )
-		{
-			_isPaused = isPaused;
-			
-			_spawnedFloorSegments.ForEach( arg => arg.SetPause(isPaused) );
-			_spawnedObstacles.ForEach( arg => arg.SetPause(isPaused) );
-		}
 
 		public (float left, float right) GetLevelBounds()
 		{

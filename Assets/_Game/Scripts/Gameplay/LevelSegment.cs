@@ -25,14 +25,28 @@ namespace Gameplay.Levels
 		public AssetReferenceGameObject OriginAssetRef { get; private set; }
 
 		private Action<LevelSegment> _onElementDestroyed;
+		private SignalBus _signalBus;
 
 		[Inject]
-		public void Construct( LevelManager _LevelManager )
+		public void Construct( LevelManager levelManager, SignalBus signalBus )
 		{
-			_levelManager = _LevelManager;
+			_levelManager = levelManager;
+			
+			_signalBus = signalBus;
+			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
+            
+			Debug.Log($"Construct on {GetInstanceID()}"  );
+			
 		}
 
-		
+		private void OnGameplayStateChanged( GameplayStateChangedSignal newState )
+		{
+			var canMove = newState.CurrentState == GameState.Play;
+
+			SetPause (canMove == false);
+		}
+
+
 		private void Start()
 		{
 			if ( _levelManager == null )
@@ -60,6 +74,8 @@ namespace Gameplay.Levels
 		{
 			_isPaused = false;
 			_onElementDestroyed = null;
+			
+			_signalBus.TryUnsubscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
 		}
 		
 		private void Update()

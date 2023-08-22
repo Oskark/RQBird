@@ -12,12 +12,41 @@ public class PlayerController : MonoBehaviour
     [Inject] private LevelManager _LevelManager;
     [Inject] private GameplayData _gameplayData;
     
+    
     public event Action OnPlayerHitSegment;
-
+    
     private bool _isPaused = false;
     
     private float? _lastPositionX = null;
+    private SignalBus _signalBus;
+    
+    [Inject]
+    public void Construct( SignalBus signalBus )
+    {
+        _signalBus = signalBus;
+        _signalBus.Subscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+    }
 
+    private void OnDestroy()
+    {
+        _signalBus?.Unsubscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+    }
+
+    private void OnGameStateChanged( GameplayStateChangedSignal newState )
+    {
+        var isFinished = newState.CurrentState == GameState.Result;
+        if ( isFinished )
+        {
+            _isPaused = false;
+            _Rigidbody.isKinematic = false; // Player can fall on failure
+            
+            return;
+        }
+        
+        var isPlaying = newState.CurrentState == GameState.Play;
+        
+        SetPause( isPlaying == false );
+    }
 
     private void Update()
     {

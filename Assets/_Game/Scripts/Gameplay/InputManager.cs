@@ -1,6 +1,8 @@
 ﻿
 using System;
+using Gameplay.Levels;
 using UnityEngine;
+using Zenject;
 
 namespace Gameplay
 {
@@ -22,13 +24,36 @@ namespace Gameplay
 		private bool _JumpFromTouchWasPressed = false;
 		private float _LastSlideChanged = 0;
 
-		private void Awake()
+		private SignalBus _signalBus;
+		
+		
+		[Inject]
+		public void Construct( SignalBus signalBus )
+		{
+			_signalBus = signalBus;
+			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+		}
+
+
+		protected void Awake()
 		{
 			TouchController.JumpPressed -= OnJumpPressed;
 			TouchController.JumpPressed += OnJumpPressed;
 			
 			TouchController.SlidePerformed -= OnSlidePerformed;
 			TouchController.SlidePerformed += OnSlidePerformed;
+		}
+
+		private void OnDestroy()
+		{
+			_signalBus.Unsubscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+		}
+
+		private void OnGameStateChanged( GameplayStateChangedSignal newGameState )
+		{
+			var  isPlaying = newGameState.CurrentState == GameState.Play;
+
+			IsPaused = !isPlaying;
 		}
 
 		private void Update()

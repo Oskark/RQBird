@@ -1,7 +1,5 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Gameplay.Levels;
@@ -16,28 +14,37 @@ namespace Gameplay
 {
 	using LevelSegmentRef = AssetReferenceGameObject;
 
-	[CreateAssetMenu( fileName = "GameplayElementsProvider", menuName = "OneTimeScripts/GameplayElementsProvider" )]
-	public class GameplayElementsProvider : ScriptableObject
+	public class GameplayElementsProvider : IInitializable,IDisposable
 	{
-		[SerializeField] private AssetReference _ElementsContainerRef;
-        
-		[Inject] private ScriptablesInstaller _SOInstaller;
-
+		[Inject(Id = "ElementsContainerRef")] 
+		private AssetReference _ElementsContainerRef;
 		private GameplayElementsContainer _elementsContainerInstance;
 		
 		private Dictionary<LevelSegmentRef, LevelSegment> _preloadedElements;
 		private Dictionary<LevelSegmentRef, IObjectPool<LevelSegment>> _segmentsPool;
 
 		private Transform _poolContainer;
-
-		private Func<GameObject, LevelSegment> _spawnFunc;
-		
+        
 		private static bool _alreadyPreloaded = false;
+
 
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
 		private static void ResetStatics()
 		{
 			_alreadyPreloaded = false;
+		}
+
+		public void Initialize()
+		{
+		}
+		
+		[Inject]
+		public void Construct( SignalBus signalBus )
+		{
+		}
+
+		public void Dispose()
+		{
 		}
 		
 		public LevelSegment GetFloor()
@@ -60,16 +67,15 @@ namespace Gameplay
 			_segmentsPool[segmentRef].Release( segment );
 		}
 
-		public async Task PreloadElements(Func<GameObject, LevelSegment> spawnFunc)
+		public async Task PreloadElements()
 		{
-			Debug.Log( $"Preload on instance {GetInstanceID()}" );
+			// Debug.Log( $"Preload on instance {GetInstanceID()}" );
 			if (_alreadyPreloaded) return;
 			
-			_spawnFunc = spawnFunc;
 			_preloadedElements = new Dictionary<LevelSegmentRef, LevelSegment>();
 			_segmentsPool = new Dictionary<LevelSegmentRef, IObjectPool<LevelSegment>>();
 			_poolContainer = new GameObject("SegmentsPool").transform;
-			DontDestroyOnLoad( _poolContainer );
+			GameObject.DontDestroyOnLoad( _poolContainer );
 			
 			if (_elementsContainerInstance == null)
 			{
@@ -135,13 +141,11 @@ namespace Gameplay
 						instance.gameObject.SetActive( false );
 
 						instance.SetMyAssetRef( _ref );
-						Debug.Log($" created {instance} ({instance.GetInstanceID()}) due {_segmentsPool[_ref].CountInactive}"  );
 						return instance;
 					},
 					actionOnGet: segment =>
 					{
 						segment.gameObject.SetActive( true );
-						Debug.Log($" got { segment }({segment.GetInstanceID()})"  );
 					},
 					actionOnRelease: segment =>
 					{
@@ -149,13 +153,10 @@ namespace Gameplay
 						segment.transform.SetParent( _poolContainer );
 						segment.gameObject.SetActive( false );
 						
-						Debug.Log($" released { segment }({segment.GetInstanceID()})"  );
 					},
 					actionOnDestroy: segment =>
 					{
-						Debug.Log($" Destroy { segment }({segment.GetInstanceID()})"  );
-
-						Destroy( segment.gameObject );
+						GameObject.Destroy( segment.gameObject );
 						
 					},
 					defaultCapacity: 3,
@@ -188,7 +189,10 @@ namespace Gameplay
 				Addressables.ReleaseInstance( preloadedElementsValue.gameObject );
 			}
 			
-			Destroy( _poolContainer );
+			if (_poolContainer != null)
+				GameObject.Destroy( _poolContainer.gameObject );
+			
+			
 			_preloadedElements.Clear();
 			_alreadyPreloaded = false;
 		}

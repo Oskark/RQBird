@@ -5,13 +5,11 @@ using Zenject;
 
 namespace Gameplay.Levels
 {
-	public class LevelManager : MonoBehaviour
+	public class LevelManager : MonoBehaviour, IInitializable
 	{
 		[Inject] private GameplayData _gameplayData;
-
 		[Inject] private LevelGenerator _LevelGenerator;
-        
-		
+
 		public float DistancePassed => _distancePassed;
 		public float CurrentSpeed => _basePlayerSpeed + _accelerationPerAdvance * _accelerationsAmount;
 		
@@ -25,14 +23,34 @@ namespace Gameplay.Levels
 		private float _basePlayerSpeed;
 		private float _accelerationPerAdvance;
 
+		private SignalBus _signalBus;
+
 		private void Start()
 		{
 			_accelerationsCountToIncreaseSpeed = _gameplayData.ObstaclesPassedToAccelerate;
 			_basePlayerSpeed = _gameplayData.PlayerMoveSpeed;
 			_accelerationPerAdvance = _gameplayData.AccelerationPerAdvance;
 
-			_LevelGenerator.Init(OnObstaclePassed);
+			_LevelGenerator.OnObstaclePassed -= OnObstaclePassed;
+			_LevelGenerator.OnObstaclePassed += OnObstaclePassed;
 		}
+        
+		[Inject]
+		public void Construct( SignalBus signalBus )
+		{
+			Debug.Log($"Construct with signal bus: {signalBus}"  );
+			_signalBus = signalBus;
+			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+		}
+
+		private void OnGameStateChanged( GameplayStateChangedSignal newState )
+		{
+			var isPlaying = newState.CurrentState == GameState.Play;
+			
+			SetPause( isPlaying == false );
+		}
+
+
 
 		private void OnObstaclePassed()
 		{
@@ -61,9 +79,7 @@ namespace Gameplay.Levels
 		public void SetPause(bool isPaused)
 		{
 			_isPaused = isPaused;
-			
-			_LevelGenerator.SetPause(isPaused);
-		}
+        }
 
 
 		private void UpdateDistancePassed()
@@ -75,5 +91,13 @@ namespace Gameplay.Levels
 		{
 			_LevelGenerator.GenerateLevel();
 		}
+
+		public void Initialize()
+		{
+			Debug.Log($"Initialize LevelManager"  );
+			// _signalBus.Subscribe( typeof(GameplayStateChangedSignal), NewState );
+		}
+
+
 	}
 }

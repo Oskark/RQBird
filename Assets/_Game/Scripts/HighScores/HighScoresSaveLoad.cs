@@ -78,7 +78,6 @@
 		public void Test_Save()
 		{
 			var randomContent = new List<HighScoreEntry>();
-			// var amountOfDatas = UnityEngine.Random.Range( 1, 10 );
 			var amountOfDatas = 20;
 
 			for ( int i = 0; i < amountOfDatas; i++ )

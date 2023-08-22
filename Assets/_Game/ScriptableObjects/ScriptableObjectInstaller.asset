@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3096bc22363313942b6bf70b700d015b, type: 3}
   m_Name: ScriptableObjectInstaller
   m_EditorClassIdentifier: 
-  _ElementsProvider: {fileID: 11400000, guid: 32f85fbdb2f4d5a4d95831b159149be2, type: 2}
+  _ElementsContainerRef:
+    m_AssetGUID: b227b5e357fcb824c86c6063fa4ecf75
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  _HighScoresManager: {fileID: 11400000, guid: 6cca9459514a47e45a8ac0272017621a, type: 2}

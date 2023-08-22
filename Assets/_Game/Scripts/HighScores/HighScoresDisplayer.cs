@@ -2,6 +2,7 @@
 	using System;
 	using System.Collections.Generic;
 	using UnityEngine;
+	using Zenject;
 
 	public class HighScoresDisplayer : MonoBehaviour
 	{
@@ -10,12 +11,14 @@
 		[SerializeField] private int _MaxDisplayedAmount = 10;
 		
 		[Header("Neccessary refs")]
-		[SerializeField] private HighScoresManager _HighScoresManager;
 		[SerializeField] private MainMenuController _MainMenuController;
 
 		[SerializeField] private Transform _SpawnContainer;
 		[SerializeField] private HighScoreDisplayerEntry _HighScoreEntryPrefab;
 
+		[Inject] private HighScoresManager _HighScoresManager;
+		
+		
 		private List<HighScoreDisplayerEntry> _spawnedInstances = new List<HighScoreDisplayerEntry>();
 		
 		public void Show()
@@ -57,6 +60,7 @@
 				var highScoreEntry = highScores[i];
 				var spawnedInstance = Instantiate( _HighScoreEntryPrefab, _SpawnContainer );
 				spawnedInstance.SetData( i + 1, highScoreEntry );
+				
 				_spawnedInstances.Add( spawnedInstance );
 			}
 		}
