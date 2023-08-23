@@ -34,7 +34,7 @@ public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstall
         Container.BindInstance( _ElementsContainerRef ).WithId( "ElementsContainerRef" );
         Container.BindInstance( _GameplayData ).AsSingle();
 
-        Container.BindInstance( _HighScoresManager ).AsSingle();
+        Container.Bind<IHighScorable>().To<HighScoresManager>().FromNew().AsSingle();
         
         _alreadyInstalled = true;
     }

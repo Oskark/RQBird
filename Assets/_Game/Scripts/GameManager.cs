@@ -17,7 +17,7 @@ namespace Gameplay.Levels
 		[Inject] private LevelManager _LevelManager;
 		[Inject] private GameplayElementsProvider _GameplayElementsProvider;
 
-		[Inject] private HighScoresManager _HighScoresManager;
+		[Inject] private IHighScorable _HighScoresManager;
 
 
 		private void Awake()
@@ -112,14 +112,14 @@ namespace Gameplay.Levels
 			_PlayerController.OnPlayerHitSegment -= OnPlayerHitSegment;
             
 			var obtainedScore = (int) _LevelManager.DistancePassed;
-			_HighScoresManager.Init( () =>
-			{
-				_HighScoresManager.RegisterScore( obtainedScore, out var highScorePosition, out var lowestHighScoreValue );
 			
+			_HighScoresManager.RegisterScoreAndThen( obtainedScore, OnScoreRegistered );
+			
+			void OnScoreRegistered(int highScorePosition, int lowestHighScoreValue)
+			{
 				_GameplayHUD.ShowGameOverPanel( obtainedScore, highScorePosition, lowestHighScoreValue, OnRestart, OnExit );
-
-			} );
-		}
+			}
+        }
 
 		private void OnRestart()
 		{

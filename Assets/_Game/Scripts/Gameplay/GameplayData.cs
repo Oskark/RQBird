@@ -20,8 +20,11 @@ namespace Gameplay
 
 
 		[field: Header( "Pool settings" )] 
-		[field: SerializeField] public int EntryPoolDefaultCapacity = 3;
-		[field: SerializeField] public int EntryPoolMaxCapacity = 5;
+		[field: SerializeField] public int EntryPoolDefaultCapacity  { get; private set; }= 3;
+		[field: SerializeField] public int EntryPoolMaxCapacity { get; private set; }= 5;
+		
+		[field: Header( "High scores settings" )]
+		[field: SerializeField] public int SavedHighScoresAmount { get; private set; }= 20;
 		
 	}
 }

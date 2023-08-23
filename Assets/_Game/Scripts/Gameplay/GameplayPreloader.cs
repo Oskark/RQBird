@@ -19,7 +19,7 @@ public class GameplayPreloader : MonoBehaviour
 			return;
 		}
 
-		PreloadAsync(  );
+		PreloadAsync(  ).Forget();
 	}
 
 	public void MakeSurePreloadCompletedAndThen( Action onPreloaded )
@@ -33,7 +33,7 @@ public class GameplayPreloader : MonoBehaviour
 		_notifyOnFinish += onPreloaded;
 	}
     
-    private async Task PreloadAsync(  )
+    private async UniTask PreloadAsync(  )
     {
 		await UniTask.RunOnThreadPool( _Provider.PreloadElements );
 

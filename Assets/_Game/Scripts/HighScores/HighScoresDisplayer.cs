@@ -16,14 +16,14 @@
 		[SerializeField] private Transform _SpawnContainer;
 		[SerializeField] private HighScoreDisplayerEntry _HighScoreEntryPrefab;
 
-		[Inject] private HighScoresManager _HighScoresManager;
+		[Inject] private IHighScorable _HighScoresManager;
 		
 		
-		private List<HighScoreDisplayerEntry> _spawnedInstances = new List<HighScoreDisplayerEntry>();
+		private readonly List<HighScoreDisplayerEntry> _spawnedInstances = new List<HighScoreDisplayerEntry>();
 		
 		public void Show()
 		{
-            _HighScoresManager.Init( OnScoresAvailable );
+            _HighScoresManager.GetHighScores( onEntriesObtained: DisplayScores );
 		}
 
 		private void OnDisable()
@@ -40,14 +40,7 @@
 			
 			_spawnedInstances.Clear();
 		}
-
-		private void OnScoresAvailable()
-		{
-			var highScores = _HighScoresManager.GetHighScores();
-
-			DisplayScores( highScores );
-		}
-
+        
 		private void DisplayScores( List<HighScoreEntry> highScores )
 		{
 			for (int i = 0; i < highScores.Count; i++)
