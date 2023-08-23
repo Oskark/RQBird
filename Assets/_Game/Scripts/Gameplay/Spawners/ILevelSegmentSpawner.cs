@@ -17,4 +17,5 @@ public interface ILevelSegmentSpawner
 	
 	void OnObstacleDestroyed(LevelSegment instance);
 
+	void CleanUp();
 }

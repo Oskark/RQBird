@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba8b3360f6ef0e7478e5d1b0ce783779, type: 3}
   m_Name: GameplayData
   m_EditorClassIdentifier: 
-  <PlayerJumpStrength>k__BackingField: 10
+  <PlayerMoveSpeed>k__BackingField: 1
   <PlayerHorizontalSpeed>k__BackingField: 1
+  <PlayerHorizontalSpeed_KeyboardSpeed>k__BackingField: 2
+  <PlayerJumpStrength>k__BackingField: 10
   <CeilingHeight>k__BackingField: 10
+  <FirstObstacleSpawnDistanceFromFirstFloorEnd>k__BackingField: 10
+  <ObstaclesPassedToAccelerate>k__BackingField: 3
+  <AccelerationPerAdvance>k__BackingField: 0.1
+  <ObstaclesDistance>k__BackingField: 10
+  <EntryPoolDefaultCapacity>k__BackingField: 3
+  <EntryPoolMaxCapacity>k__BackingField: 5
+  <SavedHighScoresAmount>k__BackingField: 20

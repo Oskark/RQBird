@@ -1,6 +1,5 @@
 ﻿
 	using System.Collections.Generic;
-	using System.Linq;
 	using Gameplay;
 	using Gameplay.Levels;
 	using UnityEngine;
@@ -52,8 +51,8 @@
 
 		public void OnObstacleDestroyed( LevelSegment instance )
 		{
-			_gameplayElementsProvider.ReturnSegment( instance );
 			SpawnedSegments.Remove( instance );
+			_gameplayElementsProvider.ReturnSegment( instance );
 		}
 
 		private Vector3 CalculatePositionIfFirstElement(  )
@@ -63,8 +62,9 @@
 			var firstFloorSegment = _levelGenerator.GetFirstFloorSegmentOrDefault();
 			var firstFloorLength = firstFloorSegment != null ? firstFloorSegment.GetZLength() : FALLBACK_LENGTH;
 			var firstFloorPosition = firstFloorSegment != null ? firstFloorSegment.transform.position : Vector3.zero;
-				
-			return firstFloorPosition + firstFloorLength * Vector3.forward;
+
+			var firstObstacleSpawnDistance = _gameplayData.FirstObstacleSpawnDistanceFromFirstFloorEnd;
+			return firstFloorPosition + Vector3.forward * (firstFloorLength + firstObstacleSpawnDistance);
 		}
         
 		private Vector3 CalculateNewPositionFromLastObstacle( LevelSegment lastObstacle )
@@ -75,5 +75,11 @@
 			
 			return lastObstaclePosition + distanceBetweenObstacles - obstacleSpecificOffset;
 		}
-		
+
+		public void CleanUp()
+		{
+			SpawnedSegments.ForEach( segment => _gameplayElementsProvider.ReturnSegment( segment ) );
+			
+			SpawnedSegments.Clear();
+		}
 	}

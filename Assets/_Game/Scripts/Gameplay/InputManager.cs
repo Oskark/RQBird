@@ -24,7 +24,7 @@ namespace Gameplay
 
 		public void Dispose()
 		{
-			Debug.Log($"Dispose"  );
+			Debug.Log($" {GetType()}: Dispose"  );
 			_signalBus.Unsubscribe<GameplayStateChangedSignal>( OnGameStateChanged );
 			
 			TouchController.JumpPressed -= OnJumpPressed;
@@ -80,6 +80,8 @@ namespace Gameplay
 			{
 				_currentKeyboardSlide = 0;
 			}
+
+			_currentKeyboardSlide = Mathf.Clamp( _currentKeyboardSlide, -1, 1 );
 
 			return _currentKeyboardSlide;
 		}

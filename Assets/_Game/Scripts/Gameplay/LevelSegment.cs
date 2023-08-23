@@ -17,9 +17,7 @@ namespace Gameplay.Levels
 		[SerializeField] private BoxCollider _Collider;
 		[SerializeField] private float _DistanceRemovalThreshold = 10f;
 
-		[Inject] private PlayerController _playerController;
 		[Inject] private LevelManager _levelManager;
-		[Inject] private GameInstaller _gameInstaller;
 
 		private bool _isPaused = false;
 
@@ -31,6 +29,8 @@ namespace Gameplay.Levels
 		{
 			_levelManager = levelManager;
 			_signalBus = signalBus;
+			
+			Debug.Log($"Construct {name} {GetInstanceID()}"  );
 		}
 
 		private void OnGameplayStateChanged( GameplayStateChangedSignal newState )
@@ -47,11 +47,6 @@ namespace Gameplay.Levels
 			{
 				Debug.LogError( $"No levelMAnager on {name}" );
 			}
-			
-			if ( _gameInstaller == null )
-			{
-				Debug.LogError( $"No _gameInstaller on {name}" );
-			}
 		}
 
 		public void Init( Action<LevelSegment> onElementDestroyed )
@@ -66,12 +61,18 @@ namespace Gameplay.Levels
 
 		public void ResetData()
 		{
+			Debug.Log($"Reset data on {name} {GetInstanceID()}"  );
 			_isPaused = false;
 			_onElementDestroyed = null;
 			
-			_signalBus.TryUnsubscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
+			_signalBus.Unsubscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
 		}
-		
+
+		private void OnDestroy()
+		{
+			Debug.Log( $"OnDestroy on {name} {GetInstanceID()}" );
+		}
+
 		private void Update()
 		{
 			if ( _isPaused ) return;
@@ -96,7 +97,7 @@ namespace Gameplay.Levels
 		}
 
 
-		public void SetPause( bool isPaused )
+		private void SetPause( bool isPaused )
 		{
 			_isPaused = isPaused;
 		}
@@ -104,14 +105,12 @@ namespace Gameplay.Levels
 		public (float left, float right) GetLeftRightBounds()
 		{
 			var bc = _Collider;
-			var playerCollider = _playerController.Collider;
 			var mostLeftPosition = bc.bounds.min.x;
-			var halfOfPlayerWidth = playerCollider.bounds.size.x / 2f;
-			
-			// Returns position decreased by player size to prevent collider shaking
+			var mostRightPosition = bc.bounds.max.x;
+
 			var currentXPosition = transform.position.x;
-			var mostLeftWorldPosition  = currentXPosition + mostLeftPosition + halfOfPlayerWidth;
-			var mostRightWorldPosition = currentXPosition + bc.bounds.max.x  - halfOfPlayerWidth;
+			var mostLeftWorldPosition  = currentXPosition + mostLeftPosition;
+			var mostRightWorldPosition = currentXPosition + mostRightPosition;
 			
 			return (mostLeftWorldPosition, mostRightWorldPosition);
 		}
@@ -119,6 +118,6 @@ namespace Gameplay.Levels
 		public void Activate()
 		{
 			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
-		}
+        }
 	}
 }

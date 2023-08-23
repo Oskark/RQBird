@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using Zenject;
 
 public class ScoreDisplayer : MonoBehaviour
 {
     [SerializeField] private TMPro.TextMeshProUGUI _Text;
-	[SerializeField] private Gameplay.Levels.LevelManager _LevelManager;
+	[Inject] private Gameplay.Levels.LevelManager _LevelManager;
 
 	private StringBuilder _StringBuilder = new StringBuilder();
 	

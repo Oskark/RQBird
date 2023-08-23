@@ -89,12 +89,12 @@ namespace Gameplay
 		{
 			_preloadedSegments.TryAdd( @ref, null );
 			
-			Debug.Log($"Started preloading element: {@ref} "  );
+			// Debug.Log($"Started preloading element: {@ref} "  );
 
 			var handle =  @ref.LoadAssetAsync<GameObject>();
 			await handle.Task;
             
-			Debug.Log($"Element {@ref} preloaded "  );
+			// Debug.Log($"Element {@ref} preloaded "  );
 
 			var success = handle.Status == AsyncOperationStatus.Succeeded;
 			var segment = handle.Result;
@@ -121,7 +121,7 @@ namespace Gameplay
 				Debug.LogError( $"Failed to load element {@ref}" );
 			}
 
-			Debug.Log($"Element {@ref} finished "  );
+			// Debug.Log($"Element {@ref} finished "  );
 		}
 
 		private async Task<AsyncOperationHandle<GameplayElementsContainer>> LoadElementsContainer()

@@ -41,6 +41,7 @@ public class FloorSpawner : ILevelSegmentSpawner
 	{
 		var instance =  _gameplayElementsProvider.GetFloor();
 		
+		Debug.Log($"Added floor: {instance} {instance.GetInstanceID()}"  );
 		SpawnedSegments.Add( instance );
 
 		return instance;
@@ -48,8 +49,33 @@ public class FloorSpawner : ILevelSegmentSpawner
 
 	public void OnObstacleDestroyed( LevelSegment instance )
 	{
+		Debug.Log($"Removed floor: {instance} {instance.GetInstanceID()}"  );
+		if (SpawnedSegments.Contains( instance ))
+		{
+			SpawnedSegments.Remove( instance );
+		}
+		else Debug.LogError($"Spawned Segments did not found {instance} {instance.GetInstanceID()}"  );
+
 		_gameplayElementsProvider.ReturnSegment( instance );
-		
-		SpawnedSegments.Remove( instance );
+
 	}
+	public void CleanUp()
+	{
+		
+		SpawnedSegments.ForEach( segment =>
+		{
+			if ( segment == null )
+			{
+				Debug.LogWarning( "Cannot return empty segment" );
+				return;
+			}
+			
+			Debug.Log($"Cleaning floor: {segment} {segment.GetInstanceID()}"  );
+
+			_gameplayElementsProvider.ReturnSegment( segment );
+		} );
+		
+		SpawnedSegments.Clear();
+	}
+	
 }

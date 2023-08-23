@@ -5,13 +5,38 @@ using Zenject;
 
 namespace Gameplay.Levels
 {
-	public class LevelGenerator : MonoBehaviour
+	public class LevelGenerator : IDisposable
 	{
-        [SerializeField] private Transform _SpawnContainer;
+        private Transform _SpawnContainer;
 		
 		[Inject( Id = "FloorSpawner" )] private ILevelSegmentSpawner _floorSpawner;
 		[Inject( Id = "ObstacleSpawner" )] private ILevelSegmentSpawner _obstacleSpawner;
+
+		private SignalBus _signalBus;
 		
+		[Inject]
+		public void Construct( SignalBus signal )
+		{
+			Debug.Log($"Level Generator Construct"  );
+
+			_signalBus = signal;
+			_signalBus.Subscribe<RestartGameSignal>( OnRestart );
+			_signalBus.Subscribe<ExitGameplaySignal>( OnRestart );
+		}
+
+		private void OnRestart()
+		{
+			_floorSpawner.CleanUp();
+			_obstacleSpawner.CleanUp();
+		}
+
+		public void Dispose()
+		{
+			_signalBus.Unsubscribe<RestartGameSignal>( OnRestart );
+			
+			if (_SpawnContainer != null)
+				GameObject.Destroy( _SpawnContainer.gameObject );
+		}
 		
 		public LevelSegment GetLastSpawnedFloorSegment()
 		{
@@ -27,7 +52,9 @@ namespace Gameplay.Levels
 
 
 		public void GenerateLevel()
-		{
+		{			
+			_SpawnContainer = new GameObject("SpawnContainer").transform;
+            
 			SpawnFloors(  10 );
 			SpawnObstacles( 10 );	
 		}
@@ -67,6 +94,7 @@ namespace Gameplay.Levels
 			
 			newObstacle.Init( instance =>
 			{
+				Debug.Log($"{GetType()}: On Element destroyed {instance} {instance.GetInstanceID()}"  );
 				if ( spawner.ShouldBeReportedAsPassed )
 				{
 					OnObstaclePassed?.Invoke();
@@ -82,7 +110,7 @@ namespace Gameplay.Levels
 		{
 			return _floorSpawner.GetSegmentWidth();
 		}
-        
+
 	}
  
 }

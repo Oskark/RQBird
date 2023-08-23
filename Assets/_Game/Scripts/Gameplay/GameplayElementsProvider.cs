@@ -23,8 +23,21 @@ namespace Gameplay
 		private Dictionary<LevelSegmentRef, IObjectPool<LevelSegment>> _segmentsPool;
 
 		private Transform _poolContainer;
-        
-		        
+		
+		private SignalBus _signalBus;
+
+		[Inject]
+		private void Construct(SignalBus signalBus)
+		{
+			_signalBus = signalBus;
+			_signalBus.Subscribe<ExitGameplaySignal>( OnExitFromGameplay );
+		}
+
+		private void OnExitFromGameplay()
+		{
+			Clear();
+		}
+
 		public (float left, float right) GetFloorLeftRightSegment()
 		{
 			return _preloadedSegments[_elementsContainerInstance.FloorSegmentAR].GetLeftRightBounds();
@@ -60,6 +73,7 @@ namespace Gameplay
 		private LevelSegment CreateSegmentForPool( AssetReferenceGameObject @ref )
 		{
 			var instance = GameInstaller.SpawnStatic( _preloadedSegments[@ref].gameObject ).GetComponent<LevelSegment>();
+			Debug.Log($"Create segment for {instance} {instance.GetInstanceID()}"  );
 			instance.transform.SetParent( _poolContainer );
 			instance.gameObject.SetActive( false );
 
@@ -69,6 +83,8 @@ namespace Gameplay
 
 		private void GetSegmentFromPool( LevelSegment segment )
 		{
+			Debug.Log($"GetSegmentFromPool for {segment} {segment.GetInstanceID()}"  );
+
 			segment.gameObject.SetActive( true );
 			segment.Activate();
 		}
@@ -96,7 +112,11 @@ namespace Gameplay
 		
 		public void Clear()
 		{
-			_segmentsPool.Clear();
+			foreach ( var kvp in _segmentsPool )
+			{
+				kvp.Value.Clear();
+			}
+            
 			_elementsContainerInstance = null;
 
 			

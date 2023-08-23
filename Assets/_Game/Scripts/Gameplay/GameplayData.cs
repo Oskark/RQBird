@@ -14,7 +14,9 @@ namespace Gameplay
 		[field: Header("Map Settings")]
 		[field: SerializeField] public float CeilingHeight { get; private set; } = 10f;
 
-		[field: Header("Level Settings")]
+		[field: Header( "Level Settings" )]
+		[field: SerializeField]
+		public float FirstObstacleSpawnDistanceFromFirstFloorEnd { get; set; } = 10f;
 		[field: SerializeField] public int ObstaclesPassedToAccelerate { get; private set; } = 3;
 		[field: SerializeField] public float AccelerationPerAdvance { get; private set; } = 0.1f;
 
@@ -27,6 +29,6 @@ namespace Gameplay
 		
 		[field: Header( "High scores settings" )]
 		[field: SerializeField] public int SavedHighScoresAmount { get; private set; }= 20;
-		
+
 	}
 }

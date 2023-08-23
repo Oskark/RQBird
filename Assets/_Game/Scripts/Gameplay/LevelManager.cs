@@ -1,11 +1,9 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 using Zenject;
 
 namespace Gameplay.Levels
 {
-	public class LevelManager : MonoBehaviour, IInitializable
+	public class LevelManager : ITickable, IInitializable
 	{
 		[Inject] private GameplayData _gameplayData;
 		[Inject] private LevelGenerator _LevelGenerator;
@@ -25,21 +23,32 @@ namespace Gameplay.Levels
 
 		private SignalBus _signalBus;
 
-		private void Start()
-		{
-			_accelerationsCountToIncreaseSpeed = _gameplayData.ObstaclesPassedToAccelerate;
-			_basePlayerSpeed = _gameplayData.PlayerMoveSpeed;
-			_accelerationPerAdvance = _gameplayData.AccelerationPerAdvance;
-
-			_LevelGenerator.OnObstaclePassed -= OnObstaclePassed;
-			_LevelGenerator.OnObstaclePassed += OnObstaclePassed;
-		}
         
 		[Inject]
 		public void Construct( SignalBus signalBus )
 		{
 			_signalBus = signalBus;
 			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+			_signalBus.Subscribe<RestartGameSignal>( ResetData );
+			_signalBus.Subscribe<ExitGameplaySignal>( ResetData );
+			
+			ResetData();
+		}
+
+		private void ResetData()
+		{
+			_accelerationsCountToIncreaseSpeed = _gameplayData.ObstaclesPassedToAccelerate;
+			_basePlayerSpeed = _gameplayData.PlayerMoveSpeed;
+			_accelerationPerAdvance = _gameplayData.AccelerationPerAdvance;
+
+			_distancePassed = 0;
+			_isPaused = false;
+
+			_obstaclesPassed = 0;
+			_accelerationsAmount = 0;
+			
+			_LevelGenerator.OnObstaclePassed -= OnObstaclePassed;
+			_LevelGenerator.OnObstaclePassed += OnObstaclePassed;
 		}
 
 		private void OnGameStateChanged( GameplayStateChangedSignal newState )
@@ -61,7 +70,7 @@ namespace Gameplay.Levels
 			}
 		}
 
-		private void Update()
+		public void Tick()
 		{
 			if (_isPaused) return;
 

@@ -63,9 +63,11 @@ public class PlayerController : MonoBehaviour
     private void InitLevelData()
     {
         var levelBounds = _LevelManager.GetLevelBounds();
+
+        var colliderWidth  = _collider.bounds.size.x;
         
-        _leftBound  = levelBounds.left;
-        _rightBound = levelBounds.right;
+        _leftBound  = levelBounds.left  + colliderWidth / 2f;
+        _rightBound = levelBounds.right - colliderWidth / 2f;
     }
 
     private void Update()

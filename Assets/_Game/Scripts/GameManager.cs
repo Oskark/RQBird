@@ -17,6 +17,8 @@ namespace Gameplay.Levels
 
 		[Inject] private IHighScorable _HighScoresManager;
 
+		private SignalBus _signalBus;
+
 
 		private void Awake()
 		{
@@ -109,15 +111,18 @@ namespace Gameplay.Levels
 
 		private void OnRestart()
 		{
+			_signalBus.Fire( new RestartGameSignal()  );
+			
 			SceneManager.LoadScene( "Gameplay" );
 		}
 
 		private void OnExit()
 		{
+			_signalBus.Fire( new ExitGameplaySignal() );
+			
 			SceneManager.LoadScene( "MainMenu" );
 		}
 
-		private SignalBus _signalBus;
 		public void Initialize()
 		{
 			
