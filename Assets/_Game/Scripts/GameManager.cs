@@ -10,8 +10,8 @@ namespace Gameplay.Levels
 	public class GameManager : MonoBehaviour, IInitializable, IDisposable
 	{
 		[SerializeField] private GameplayHUD _GameplayHUD;
-		[SerializeField] private PlayerController _PlayerController;
-
+		
+		[Inject] private PlayerController _PlayerController;
 		[Inject] private LevelManager _LevelManager;
 		[Inject] private GameplayElementsProvider _GameplayElementsProvider;
 
@@ -22,12 +22,13 @@ namespace Gameplay.Levels
 		{
 			Application.targetFrameRate = 60;
 			
-			_PlayerController.OnPlayerHitSegment -= OnPlayerHitSegment;
-			_PlayerController.OnPlayerHitSegment += OnPlayerHitSegment;
         }
 
 		private void Start()
 		{
+			_PlayerController.OnPlayerHitSegment -= OnPlayerHitSegment;
+			_PlayerController.OnPlayerHitSegment += OnPlayerHitSegment;
+
 			PrepareGame();
 		}
 

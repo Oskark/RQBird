@@ -14,9 +14,10 @@ namespace Gameplay.Levels
 		public AssetReferenceGameObject OriginAssetRef { get; private set; }
 		[field: SerializeField] public Vector3 SpawnOffset { get; private set; }
 
-		[SerializeField] private Collider _Collider;
+		[SerializeField] private BoxCollider _Collider;
 		[SerializeField] private float _DistanceRemovalThreshold = 10f;
 
+		[Inject] private PlayerController _playerController;
 		[Inject] private LevelManager _levelManager;
 		[Inject] private GameInstaller _gameInstaller;
 
@@ -79,6 +80,7 @@ namespace Gameplay.Levels
 			{
 				return;
 			}
+			
 			transform.position += Vector3.back * (Time.deltaTime * _Speed * _levelManager.CurrentSpeed);
 
 			if ( transform.position.z < -_DistanceRemovalThreshold )
@@ -101,8 +103,17 @@ namespace Gameplay.Levels
 
 		public (float left, float right) GetLeftRightBounds()
 		{
-			var bc = _Collider as BoxCollider;
-			return (bc.bounds.min.x + 0.55f, bc.bounds.max.x - 0.5f); // TODO: take this value from proper place - player collider
+			var bc = _Collider;
+			var playerCollider = _playerController.Collider;
+			var mostLeftPosition = bc.bounds.min.x;
+			var halfOfPlayerWidth = playerCollider.bounds.size.x / 2f;
+			
+			// Returns position decreased by player size to prevent collider shaking
+			var currentXPosition = transform.position.x;
+			var mostLeftWorldPosition  = currentXPosition + mostLeftPosition + halfOfPlayerWidth;
+			var mostRightWorldPosition = currentXPosition + bc.bounds.max.x  - halfOfPlayerWidth;
+			
+			return (mostLeftWorldPosition, mostRightWorldPosition);
 		}
 
 		public void Activate()

@@ -7,6 +7,7 @@ using Zenject;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _Rigidbody;
+    [SerializeField] private CapsuleCollider _collider;
     
     [Inject] private InputManager _inputManager;
     [Inject] private LevelManager _LevelManager;
@@ -21,7 +22,8 @@ public class PlayerController : MonoBehaviour
 
     private float _leftBound;
     private float _rightBound;
-    
+    public Collider Collider => _collider;
+
     [Inject]
     public void Construct( SignalBus signalBus )
     {
