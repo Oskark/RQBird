@@ -66,8 +66,8 @@ public class PlayerController : MonoBehaviour
 
         var colliderWidth  = _collider.bounds.size.x;
         
-        _leftBound  = levelBounds.left  + colliderWidth / 2f;
-        _rightBound = levelBounds.right - colliderWidth / 2f;
+        _leftBound  = levelBounds.left  + colliderWidth;
+        _rightBound = levelBounds.right - colliderWidth;
     }
 
     private void Update()

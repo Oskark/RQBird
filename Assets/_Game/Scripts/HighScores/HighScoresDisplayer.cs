@@ -1,29 +1,26 @@
 ﻿
 	using System;
 	using System.Collections.Generic;
+	using Gameplay;
 	using UnityEngine;
 	using Zenject;
 
 	public class HighScoresDisplayer : MonoBehaviour
 	{
-
-		[Header("Settings")]
-		[SerializeField] private int _MaxDisplayedAmount = 10;
-		
 		[Header("Neccessary refs")]
 		[SerializeField] private MainMenuController _MainMenuController;
 
 		[SerializeField] private Transform _SpawnContainer;
 		[SerializeField] private HighScoreDisplayerEntry _HighScoreEntryPrefab;
 
-		[Inject] private IHighScorable _HighScoresManager;
-		
+		[Inject] private IHighScorable _highScoresManager;
+		[Inject] private GameplayData _gameplayData;
 		
 		private readonly List<HighScoreDisplayerEntry> _spawnedInstances = new List<HighScoreDisplayerEntry>();
 		
 		public void Show()
 		{
-            _HighScoresManager.GetHighScores( onEntriesObtained: DisplayScores );
+            _highScoresManager.GetHighScores( onEntriesObtained: DisplayScores );
 		}
 
 		private void OnDisable()
@@ -43,9 +40,11 @@
         
 		private void DisplayScores( List<HighScoreEntry> highScores )
 		{
+			var maxDisplayedAmount = _gameplayData.SavedHighScoresAmount;
+			
 			for (int i = 0; i < highScores.Count; i++)
 			{
-				if ( i >= _MaxDisplayedAmount )
+				if ( i >= maxDisplayedAmount )
 				{
 					break;
 				}

@@ -7,11 +7,15 @@ namespace Gameplay.Levels
 {
 	public class LevelGenerator : IDisposable
 	{
-        private Transform _SpawnContainer;
+		public const string FLOOR_SPAWNER_ID = "FloorSpawner";
+		public const string OBSTACLE_SPAWNER_ID = "ObstacleSpawner";
 		
-		[Inject( Id = "FloorSpawner" )] private ILevelSegmentSpawner _floorSpawner;
-		[Inject( Id = "ObstacleSpawner" )] private ILevelSegmentSpawner _obstacleSpawner;
+		public event Action OnObstaclePassed;
 
+		[Inject( Id = FLOOR_SPAWNER_ID )] private ILevelSegmentSpawner _floorSpawner;
+		[Inject( Id = OBSTACLE_SPAWNER_ID )] private ILevelSegmentSpawner _obstacleSpawner;
+		
+		private Transform _spawnContainer;
 		private SignalBus _signalBus;
 		
 		[Inject]
@@ -34,8 +38,8 @@ namespace Gameplay.Levels
 		{
 			_signalBus.Unsubscribe<RestartGameSignal>( OnRestart );
 			
-			if (_SpawnContainer != null)
-				GameObject.Destroy( _SpawnContainer.gameObject );
+			if (_spawnContainer != null)
+				GameObject.Destroy( _spawnContainer.gameObject );
 		}
 		
 		public LevelSegment GetLastSpawnedFloorSegment()
@@ -47,13 +51,10 @@ namespace Gameplay.Levels
 		{
 			return _floorSpawner?.SpawnedSegments.ElementAtOrDefault( 0 );
 		}
-		
-		public event Action OnObstaclePassed;
-
 
 		public void GenerateLevel()
 		{			
-			_SpawnContainer = new GameObject("SpawnContainer").transform;
+			_spawnContainer = new GameObject("SpawnContainer").transform;
             
 			SpawnFloors(  10 );
 			SpawnObstacles( 10 );	
@@ -90,7 +91,7 @@ namespace Gameplay.Levels
 
 			newObstacle.transform.position = spawnPosition;
 			newObstacle.transform.rotation = Quaternion.identity;
-			newObstacle.transform.SetParent( _SpawnContainer );
+			newObstacle.transform.SetParent( _spawnContainer );
 			
 			newObstacle.Init( instance =>
 			{

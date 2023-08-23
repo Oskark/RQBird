@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Gameplay.Levels
 {
-	public class GameManager : MonoBehaviour, IInitializable, IDisposable
+	public class GameManager : MonoBehaviour, IDisposable
 	{
 		[SerializeField] private GameplayHUD _GameplayHUD;
 		
@@ -34,23 +34,9 @@ namespace Gameplay.Levels
 			PrepareGame();
 		}
 
-		private void Update()
-		{
-			if ( Input.GetKeyDown( KeyCode.E ) )
-			{
-				ChangeStateTo( GameState.Pause );
-			}
-			
-			if ( Input.GetKeyDown( KeyCode.Q ) )
-			{
-				ChangeStateTo( GameState.Play );
-			}
-		}
-
 		private void ChangeStateTo(GameState state)
 		{
 			Debug.Log($"Changed state to: {state}"  );
-			// OnGameStateChanged?.Invoke( state );
 
 			_signalBus.Fire( new GameplayStateChangedSignal { CurrentState = state } );
 		}
@@ -59,9 +45,6 @@ namespace Gameplay.Levels
 		{
 			ChangeStateTo( GameState.Loading );
             
-			// FreezePlayer();
-			// FreezeLevel();
-
 			await PreloadMapIfNeeded();
 
 			GenerateLevel();
@@ -97,17 +80,31 @@ namespace Gameplay.Levels
 		{
 			ChangeStateTo( GameState.Result );
 
+			RemoveEvent();
+
+			RegisterScoreAndThen( ShowResult );
+		}
+
+		private void RemoveEvent()
+		{
 			_PlayerController.OnPlayerHitSegment -= OnPlayerHitSegment;
-            
+		}
+
+		private void RegisterScoreAndThen(Action<int, int, int> then)
+		{
 			var obtainedScore = (int) _LevelManager.DistancePassed;
+            
+			_HighScoresManager.RegisterScoreAndThen( obtainedScore, ThenFunc );
+			return;
 			
-			_HighScoresManager.RegisterScoreAndThen( obtainedScore, OnScoreRegistered );
-			
-			void OnScoreRegistered(int highScorePosition, int lowestHighScoreValue)
-			{
-				_GameplayHUD.ShowGameOverPanel( obtainedScore, highScorePosition, lowestHighScoreValue, OnRestart, OnExit );
-			}
-        }
+			void ThenFunc( int scorePosition, int lowestHighscore ) => then( obtainedScore, scorePosition, lowestHighscore );
+		}
+		
+		private void ShowResult(int obtainedScore, int highScorePosition, int lowestHighScoreValue)
+		{
+			_GameplayHUD.ShowGameOverPanel( obtainedScore, highScorePosition, lowestHighScoreValue, OnRestart, OnExit );
+
+		}
 
 		private void OnRestart()
 		{
@@ -123,10 +120,6 @@ namespace Gameplay.Levels
 			SceneManager.LoadScene( "MainMenu" );
 		}
 
-		public void Initialize()
-		{
-			
-		}
 		
 		[Inject]
 		public void Construct( SignalBus signalBus )

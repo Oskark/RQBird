@@ -31,7 +31,7 @@ namespace Gameplay
 			var currentPointerPosition = LastPointerPosition( eventData );
 			var delta = currentPointerPosition - _beginMovementPosition;
 
-			var areaToMoveCompletely = _TouchArea.rect.width / 3f;
+			var areaToMoveCompletely = _TouchArea.rect.width / 3f; // Approx 1/3 of area to move completely
 			delta = delta / areaToMoveCompletely;
 
 			SlidePerformed?.Invoke( delta.Value );
@@ -42,17 +42,18 @@ namespace Gameplay
 			var input = eventData.currentInputModule.input;
 			if ( Input.touchCount > 0 )
 			{
-				if ( Input.touchCount == 1 )
+				var oneFingerTouch = Input.touchCount == 1;
+				if ( oneFingerTouch )
 				{
 					var touch = input.GetTouch( 0 );
 					_beginMovementPosition = touch.position.x;
 					_beginMovementFingerID = touch.fingerId;
 				}
-
-				var k = eventData as PointerEventData;
-				if ( k != null )
+                
+				var pointerData = eventData as PointerEventData; 
+				if ( pointerData != null )
 				{
-					var touch = input.GetTouch( k.pointerId );
+					var touch = input.GetTouch( pointerData.pointerId );
 					_beginMovementPosition = touch.position.x;
 					_beginMovementFingerID = touch.fingerId;
 				}

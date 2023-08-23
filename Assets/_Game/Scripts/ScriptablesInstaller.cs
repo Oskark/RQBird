@@ -41,8 +41,8 @@ public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstall
 
         Container.Bind<IHighScorable>().To<HighScoresManager>().FromNew().AsSingle();
         
-        Container.Bind<ILevelSegmentSpawner>().WithId( "FloorSpawner" ).To<FloorSpawner>().FromNew( ).AsSingle();
-        Container.Bind<ILevelSegmentSpawner>().WithId( "ObstacleSpawner" ).To<ObstacleSpawner>().FromNew( ).AsSingle();
+        Container.Bind<ILevelSegmentSpawner>().WithId( LevelGenerator.FLOOR_SPAWNER_ID ).To<FloorSpawner>().FromNew( ).AsSingle();
+        Container.Bind<ILevelSegmentSpawner>().WithId( LevelGenerator.OBSTACLE_SPAWNER_ID ).To<ObstacleSpawner>().FromNew( ).AsSingle();
 
         _alreadyInstalled = true;
     }
