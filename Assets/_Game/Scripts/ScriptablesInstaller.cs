@@ -30,9 +30,10 @@ public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstall
         Container.DeclareSignal<GameplayStateChangedSignal>();
 
         Container.Bind<ScriptablesInstaller>().FromScriptableObject( this ).AsSingle();
-        Container.Bind<GameplayElementsProvider>( ).FromNew().AsSingle();
         Container.BindInstance( _ElementsContainerRef ).WithId( "ElementsContainerRef" );
         Container.BindInstance( _GameplayData ).AsSingle();
+        
+        Container.BindInterfacesAndSelfTo<GameplayElementsProvider>( ).FromNew().AsSingle();
 
         Container.Bind<IHighScorable>().To<HighScoresManager>().FromNew().AsSingle();
         

@@ -35,7 +35,7 @@ public class GameplayPreloader : MonoBehaviour
     
     private async UniTask PreloadAsync(  )
     {
-		await UniTask.RunOnThreadPool( _Provider.PreloadElements );
+		await _Provider.PreloadElements();
 
 		_alreadyPreloaded = true;
 		

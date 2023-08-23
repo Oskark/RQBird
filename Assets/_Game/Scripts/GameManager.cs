@@ -46,14 +46,6 @@ namespace Gameplay.Levels
 			}
 		}
 
-		private void OnDestroy()
-		{
-			if ( _GameplayElementsProvider != null )
-			{
-				_GameplayElementsProvider.Clear ();
-			}
-        }
-
 		private void ChangeStateTo(GameState state)
 		{
 			Debug.Log($"Changed state to: {state}"  );
