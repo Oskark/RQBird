@@ -15,8 +15,9 @@ namespace Gameplay
 
 		private bool IsPaused { get; set; }
 
-		private bool _JumpFromTouchWasPressed = false;
-		private float _LastSlideChanged = 0;
+		private bool _jumpFromTouchWasPressed = false;
+		private float _lastSlideChanged = 0;
+		private float _currentKeyboardSlide = 0;
 
 		private SignalBus _signalBus;
         
@@ -62,10 +63,9 @@ namespace Gameplay
         
 		private float ReadTouchSlide()
 		{
-			return _LastSlideChanged;
+			return _lastSlideChanged;
 		}
 
-		private float _currentKeyboardSlide = 0;
 		private float ReadKeyboardSlide()
 		{
 			if  (Input.GetKey(KeyCode.A) )
@@ -87,9 +87,9 @@ namespace Gameplay
 
 		private bool ReadTouchJump()
 		{
-			if (!_JumpFromTouchWasPressed) return false;
+			if (!_jumpFromTouchWasPressed) return false;
 
-			_JumpFromTouchWasPressed = false;
+			_jumpFromTouchWasPressed = false;
 			return true;
 		}
 		
@@ -100,13 +100,13 @@ namespace Gameplay
 		
 		private void OnJumpPressed()
 		{
-			_JumpFromTouchWasPressed = true;
+			_jumpFromTouchWasPressed = true;
 		}
 
 
 		private void OnSlidePerformed(float change)
 		{
-			_LastSlideChanged = change;
+			_lastSlideChanged = change;
 		}
 
 
