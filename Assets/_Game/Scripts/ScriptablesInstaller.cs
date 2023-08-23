@@ -31,6 +31,7 @@ public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstall
         Container.DeclareSignal<ExitGameplaySignal>();
 
         Container.Bind<ScriptablesInstaller>().FromScriptableObject( this ).AsSingle();
+        
         Container.BindInstance( _ElementsContainerRef ).WithId( "ElementsContainerRef" );
         Container.BindInstance( _GameplayData ).AsSingle();
 
