@@ -8,13 +8,12 @@ namespace Gameplay.Levels
 {
 	public class LevelSegment : MonoBehaviour
 	{
-
-		public static event Action OnPlayerHitSegment;
-		
+        
 		[SerializeField] private float _Speed = 8f;
 
+		public AssetReferenceGameObject OriginAssetRef { get; private set; }
 		[field: SerializeField] public Vector3 SpawnOffset { get; private set; }
-		
+
 		[SerializeField] private Collider _Collider;
 		[SerializeField] private float _DistanceRemovalThreshold = 10f;
 
@@ -22,7 +21,6 @@ namespace Gameplay.Levels
 		[Inject] private GameInstaller _gameInstaller;
 
 		private bool _isPaused = false;
-		public AssetReferenceGameObject OriginAssetRef { get; private set; }
 
 		private Action<LevelSegment> _onElementDestroyed;
 		private SignalBus _signalBus;
@@ -89,13 +87,6 @@ namespace Gameplay.Levels
 			}
 		}
 
-		private void OnCollisionEnter( Collision other )
-		{
-			if ( other.gameObject.CompareTag( "Player" ) )
-			{
-				OnPlayerHitSegment?.Invoke();
-			}
-		}
 
 		public float GetZLength()
 		{

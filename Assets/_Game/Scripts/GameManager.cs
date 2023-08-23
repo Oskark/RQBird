@@ -9,8 +9,6 @@ namespace Gameplay.Levels
 {
 	public class GameManager : MonoBehaviour, IInitializable, IDisposable
 	{
-		
-
 		[SerializeField] private GameplayHUD _GameplayHUD;
 		[SerializeField] private PlayerController _PlayerController;
 
@@ -78,12 +76,7 @@ namespace Gameplay.Levels
 		{
 			_LevelManager.GenerateLevel();
 		}
-		//
-		// private void FreezePlayer()
-		// {
-		// 	_PlayerController.SetPause( true );
-		// }
-        
+
 		private void StartCountdown()
 		{
 			_GameplayHUD.ShowCountdown( OnCountdownFinished );

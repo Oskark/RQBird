@@ -28,6 +28,8 @@ namespace Gameplay.Levels
 			Container.BindInstance( _GameInstaller ).AsSingle();
 			
 			Container.Bind<ISpawnInjectable>().FromInstance( _GameInstaller ).AsSingle();
+			Container.Bind<ILevelSegmentSpawner>().WithId( "FloorSpawner" ).To<FloorSpawner>().FromNew( ).AsSingle();
+			Container.Bind<ILevelSegmentSpawner>().WithId( "ObstacleSpawner" ).To<ObstacleSpawner>().FromNew( ).AsSingle();
 			
 			Container.BindInterfacesAndSelfTo<InputManager>().FromNew().AsSingle();
 

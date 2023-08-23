@@ -18,6 +18,8 @@ namespace Gameplay
 		[field: SerializeField] public int ObstaclesPassedToAccelerate { get; private set; } = 3;
 		[field: SerializeField] public float AccelerationPerAdvance { get; private set; } = 0.1f;
 
+		[field: SerializeField] public float ObstaclesDistance { get; private set; } = 10f;
+
 
 		[field: Header( "Pool settings" )] 
 		[field: SerializeField] public int EntryPoolDefaultCapacity  { get; private set; }= 3;
