@@ -14,6 +14,8 @@ namespace Gameplay.Levels
 
 		[Inject( Id = FLOOR_SPAWNER_ID )] private ILevelSegmentSpawner _floorSpawner;
 		[Inject( Id = OBSTACLE_SPAWNER_ID )] private ILevelSegmentSpawner _obstacleSpawner;
+
+		[Inject] private GameplayConfig _gameplayConfig;
 		
 		private Transform _spawnContainer;
 		private SignalBus _signalBus;
@@ -53,9 +55,12 @@ namespace Gameplay.Levels
 		public void GenerateLevel()
 		{			
 			_spawnContainer = new GameObject("SpawnContainer").transform;
-            
-			SpawnFloors(  10 );
-			SpawnObstacles( 10 );	
+
+			var floorsAmount = _gameplayConfig.FloorsAmount;
+			var obstaclesAmount = _gameplayConfig.ObstaclesAmount;
+
+			SpawnFloors(  floorsAmount );
+			SpawnObstacles( obstaclesAmount );	
 		}
 
         

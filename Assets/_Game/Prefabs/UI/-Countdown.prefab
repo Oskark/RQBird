@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _IsEnabled: 1
-  _CountFrom: 0
+  _CountFrom: 3
   _CountdownValue: {fileID: 852427969258659221}
 --- !u!1 &5399961620740867079
 GameObject:

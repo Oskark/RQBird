@@ -15,12 +15,14 @@ namespace Gameplay
 		[field: SerializeField] public float CeilingHeight { get; private set; } = 10f;
 
 		[field: Header( "Level Settings" )]
-		[field: SerializeField]
-		public float FirstObstacleSpawnDistanceFromFirstFloorEnd { get; set; } = 10f;
+		[field: SerializeField] public float FirstObstacleSpawnDistanceFromFirstFloorEnd { get; set; } = 10f;
 		[field: SerializeField] public int ObstaclesPassedToAccelerate { get; private set; } = 3;
 		[field: SerializeField] public float AccelerationPerAdvance { get; private set; } = 0.1f;
 
 		[field: SerializeField] public float ObstaclesDistance { get; private set; } = 10f;
+
+		[field: SerializeField] public int FloorsAmount { get; private set; } = 10;
+		[field: SerializeField] public int ObstaclesAmount { get; private set; } = 10;
 
 
 		[field: Header( "Pool settings" )] 
