@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 8767361265541049670}
   - component: {fileID: 5966435748255731349}
   - component: {fileID: 3679528481056160081}
+  - component: {fileID: 8867785409133861594}
   m_Layer: 7
-  m_Name: Wall_Left
+  m_Name: Wall_Rotating
   m_TagString: LevelSegment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.3516, y: 10, z: 1}
+  m_LocalScale: {x: 1.087259, y: 4.6540003, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -47,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d459dcf870249419ac34e4b0007f36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <SpawnOffset>k__BackingField: {x: -2, y: 4, z: 0}
+  <SpawnOffset>k__BackingField: {x: 0, y: 4, z: 0}
   _Collider: {fileID: 3679528481056160081}
   _DistanceRemovalThreshold: 10
 --- !u!33 &8767361265541049670
@@ -121,3 +122,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8867785409133861594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8380694142498550204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb901a7d76504746a49965ada45f22c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _RotationSpeedRange: {x: -9, y: 9}
+  _RotationAxis: {x: 0, y: 0, z: 1}

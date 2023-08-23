@@ -8,7 +8,7 @@ namespace Gameplay
 	[UsedImplicitly]
 	public class InputManager : ITickable, IDisposable
 	{
-		[Inject] private GameplayData _gameplayData;
+		[Inject] private GameplayConfig _gameplayConfig;
 		
 		public bool WasJump { get; private set; }
 		public float SlideChange { get; private set; }
@@ -24,7 +24,6 @@ namespace Gameplay
 
 		public void Dispose()
 		{
-			Debug.Log($" {GetType()}: Dispose"  );
 			_signalBus.Unsubscribe<GameplayStateChangedSignal>( OnGameStateChanged );
 			
 			TouchController.JumpPressed -= OnJumpPressed;
@@ -70,11 +69,11 @@ namespace Gameplay
 		{
 			if  (Input.GetKey(KeyCode.A) )
 			{
-				_currentKeyboardSlide -= Time.deltaTime * _gameplayData.PlayerHorizontalSpeed_KeyboardSpeed;
+				_currentKeyboardSlide -= Time.deltaTime * _gameplayConfig.PlayerHorizontalSpeed_KeyboardSpeed;
 			}
 			else if ( Input.GetKey( KeyCode.D ) )
 			{
-				_currentKeyboardSlide += Time.deltaTime * _gameplayData.PlayerHorizontalSpeed_KeyboardSpeed;
+				_currentKeyboardSlide += Time.deltaTime * _gameplayConfig.PlayerHorizontalSpeed_KeyboardSpeed;
 			}
 			else
 			{

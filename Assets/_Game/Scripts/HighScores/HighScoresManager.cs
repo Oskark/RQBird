@@ -33,7 +33,7 @@ public class HighScoreEntry
 [UsedImplicitly]
 public class HighScoresManager : IHighScorable
 {
-	[Inject] private GameplayData _gameplayData;
+	[Inject] private GameplayConfig _gameplayConfig;
 	
 	private List<HighScoreEntry> _HighScores;
 
@@ -76,7 +76,7 @@ public class HighScoresManager : IHighScorable
 	{
 		int position;
 		int lowestHighScoreValue;
-		var highScoresAmount = _gameplayData.SavedHighScoresAmount;
+		var highScoresAmount = _gameplayConfig.SavedHighScoresAmount;
 
 		var scorePosition = GetHighScorePosition( score );
         

@@ -2,13 +2,14 @@ using Gameplay;
 using Gameplay.Levels;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Serialization;
 using Zenject;
 
 [CreateAssetMenu(fileName = "ScriptableObjectInstaller", menuName = "Installers/ScriptableObjectInstaller")]
-public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstaller>
+public class PersistentsInstaller : ScriptableObjectInstaller<PersistentsInstaller>
 {
 
-    [SerializeField] private GameplayData _GameplayData;
+    [FormerlySerializedAs( "_GameplayData" ),SerializeField] private GameplayConfig _GameplayConfig;
     
     [SerializeField] private AssetReference _ElementsContainerRef;
     
@@ -30,10 +31,10 @@ public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstall
         Container.DeclareSignal<RestartGameSignal>();
         Container.DeclareSignal<ExitGameplaySignal>();
 
-        Container.Bind<ScriptablesInstaller>().FromScriptableObject( this ).AsSingle();
+        Container.Bind<PersistentsInstaller>().FromScriptableObject( this ).AsSingle();
         
         Container.BindInstance( _ElementsContainerRef ).WithId( "ElementsContainerRef" );
-        Container.BindInstance( _GameplayData ).AsSingle();
+        Container.BindInstance( _GameplayConfig ).AsSingle();
 
         Container.BindInterfacesAndSelfTo<LevelManager>().FromNew().AsSingle();
         Container.BindInterfacesAndSelfTo<LevelGenerator>().FromNew().AsSingle();

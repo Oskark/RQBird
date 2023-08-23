@@ -2,8 +2,8 @@
 
 namespace Gameplay
 {
-	[CreateAssetMenu( fileName = "GameplayData", menuName = "OneTimeScripts/GameplayData" )]
-	public class GameplayData : ScriptableObject
+	[CreateAssetMenu( fileName = "GameplayConfig", menuName = "OneTimeScripts/GameplayData" )]
+	public class GameplayConfig : ScriptableObject
 	{
 		[field: Header("PlayerConfig")]
 		[field: SerializeField] public float PlayerMoveSpeed { get; private set; } = 1f;

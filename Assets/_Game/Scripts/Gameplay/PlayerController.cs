@@ -4,14 +4,16 @@ using Gameplay.Levels;
 using UnityEngine;
 using Zenject;
 
-public class PlayerController : MonoBehaviour
+namespace Gameplay
+{
+    public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _Rigidbody;
     [SerializeField] private CapsuleCollider _collider;
     
     [Inject] private InputManager _inputManager;
     [Inject] private LevelManager _LevelManager;
-    [Inject] private GameplayData _gameplayData;
+    [Inject] private GameplayConfig _gameplayConfig;
     
     public event Action OnPlayerHitSegment;
     
@@ -87,7 +89,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleBoundaries()
     {
-        float ceilingHeight = _gameplayData.CeilingHeight;
+        float ceilingHeight = _gameplayConfig.CeilingHeight;
         
         var  isTooHigh = transform.position.y >= ceilingHeight;
         if ( isTooHigh )
@@ -131,7 +133,7 @@ public class PlayerController : MonoBehaviour
         // Where are we in the level? [0..1]
         var currentPos = Mathf.InverseLerp( _leftBound, _rightBound, _lastPositionX.Value );
         // Where we should be in the level?
-        var targetPos = currentPos + (slideChange * _gameplayData.PlayerHorizontalSpeed);
+        var targetPos = currentPos + (slideChange * _gameplayConfig.PlayerHorizontalSpeed);
         // Clamp to [-1..1]
         targetPos = Mathf.Clamp( targetPos, -1f, 1 );
         // Change to local pos
@@ -147,7 +149,7 @@ public class PlayerController : MonoBehaviour
     
     private void PerformJump()
     {
-        _Rigidbody.AddForce( Vector3.up * _gameplayData.PlayerJumpStrength, ForceMode.VelocityChange );
+        _Rigidbody.AddForce( Vector3.up * _gameplayConfig.PlayerJumpStrength, ForceMode.VelocityChange );
     }
 
     private void ResetFallingVelocity()
@@ -171,5 +173,7 @@ public class PlayerController : MonoBehaviour
         _isPaused = true;
         _Rigidbody.isKinematic = false; // Player can fall on failure
     }
+
+}
 
 }

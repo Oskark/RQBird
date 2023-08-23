@@ -5,7 +5,7 @@ namespace Gameplay.Levels
 {
 	public class LevelManager : ITickable, IInitializable
 	{
-		[Inject] private GameplayData _gameplayData;
+		[Inject] private GameplayConfig _gameplayConfig;
 		[Inject] private LevelGenerator _LevelGenerator;
 
 		public float TimeSurvived => _timeSurvived;
@@ -37,9 +37,9 @@ namespace Gameplay.Levels
 
 		private void ResetData()
 		{
-			_accelerationsCountToIncreaseSpeed = _gameplayData.ObstaclesPassedToAccelerate;
-			_basePlayerSpeed = _gameplayData.PlayerMoveSpeed;
-			_accelerationPerAdvance = _gameplayData.AccelerationPerAdvance;
+			_accelerationsCountToIncreaseSpeed = _gameplayConfig.ObstaclesPassedToAccelerate;
+			_basePlayerSpeed = _gameplayConfig.PlayerMoveSpeed;
+			_accelerationPerAdvance = _gameplayConfig.AccelerationPerAdvance;
 
 			_timeSurvived = 0;
 			_isPaused = false;

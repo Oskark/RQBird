@@ -8,7 +8,7 @@
 	public class ObstacleSpawner : ILevelSegmentSpawner
 	{
 		[Inject] private LevelGenerator _levelGenerator;
-		[Inject] private GameplayData _gameplayData;
+		[Inject] private GameplayConfig _gameplayConfig;
 		[Inject] private GameplayElementsProvider _gameplayElementsProvider;
         
 		public bool ShouldBeReportedAsPassed => true;
@@ -63,14 +63,14 @@
 			var firstFloorLength = firstFloorSegment != null ? firstFloorSegment.GetZLength() : FALLBACK_LENGTH;
 			var firstFloorPosition = firstFloorSegment != null ? firstFloorSegment.transform.position : Vector3.zero;
 
-			var firstObstacleSpawnDistance = _gameplayData.FirstObstacleSpawnDistanceFromFirstFloorEnd;
+			var firstObstacleSpawnDistance = _gameplayConfig.FirstObstacleSpawnDistanceFromFirstFloorEnd;
 			return firstFloorPosition + Vector3.forward * (firstFloorLength + firstObstacleSpawnDistance);
 		}
         
 		private Vector3 CalculateNewPositionFromLastObstacle( LevelSegment lastObstacle )
 		{
 			var lastObstaclePosition = lastObstacle.transform.position;
-			var distanceBetweenObstacles = _gameplayData.ObstaclesDistance * Vector3.forward;
+			var distanceBetweenObstacles = _gameplayConfig.ObstaclesDistance * Vector3.forward;
 			var obstacleSpecificOffset = lastObstacle.SpawnOffset;
 			
 			return lastObstaclePosition + distanceBetweenObstacles - obstacleSpecificOffset;

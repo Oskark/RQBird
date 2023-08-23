@@ -14,7 +14,7 @@
 		[SerializeField] private HighScoreDisplayerEntry _HighScoreEntryPrefab;
 
 		[Inject] private IHighScorable _highScoresManager;
-		[Inject] private GameplayData _gameplayData;
+		[Inject] private GameplayConfig _gameplayConfig;
 		
 		private readonly List<HighScoreDisplayerEntry> _spawnedInstances = new List<HighScoreDisplayerEntry>();
 		
@@ -40,7 +40,7 @@
         
 		private void DisplayScores( List<HighScoreEntry> highScores )
 		{
-			var maxDisplayedAmount = _gameplayData.SavedHighScoresAmount;
+			var maxDisplayedAmount = _gameplayConfig.SavedHighScoresAmount;
 			
 			for (int i = 0; i < highScores.Count; i++)
 			{

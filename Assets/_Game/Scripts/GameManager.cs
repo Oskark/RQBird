@@ -125,7 +125,6 @@ namespace Gameplay.Levels
 		public void Construct( SignalBus signalBus )
 		{
 			_signalBus = signalBus;
-			Debug.Log($"Construct with signalBus: {_signalBus}"  );
 		}
 
 		public void Dispose()

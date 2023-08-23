@@ -21,7 +21,7 @@ public class GameOverPanel : MonoBehaviour
     public void ShowWithHighscore( int score, int highScorePosition, Action onRestart, Action onExit )
     {
         _ScoreText.text = score.ToString();
-        _HighScorePositionText.text = highScorePosition.ToString();
+        _HighScorePositionText.text = (highScorePosition + 1).ToString();
         
         _HighScoreContainer.SetActive( true );
         _NoHighScoreContainer.SetActive( false );    

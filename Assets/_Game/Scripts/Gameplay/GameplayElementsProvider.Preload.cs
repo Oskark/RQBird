@@ -22,7 +22,6 @@ namespace Gameplay
 		public async Task PreloadElements()
 		{
 			if (_alreadyPreloaded) return;
-			Debug.Log( $"{GetType()}: Preload elements" );
 
 			InitContainers();
 
@@ -74,15 +73,12 @@ namespace Gameplay
 					allTasks.Add( PreloadElementAsync( mapSegment ) );
 				}
 			}
-
-			Debug.Log( "All tasks awaited!"  );
-
+            
 			if ( allTasks.Count > 0 )
 				await UniTask.WhenAll( allTasks );
 
 
 			_alreadyPreloaded = true;
-			Debug.Log( "All tasks completed!"  );
 		}
 		
 		private async UniTask PreloadElementAsync(LevelSegmentRef @ref )
@@ -99,7 +95,7 @@ namespace Gameplay
 			var success = handle.Status == AsyncOperationStatus.Succeeded;
 			var segment = handle.Result;
 
-			Addressables.Release( handle );
+			// Addressables.Release( handle );
 			
 			if ( success )
 			{
@@ -112,8 +108,8 @@ namespace Gameplay
 					actionOnGet: GetSegmentFromPool,
 					actionOnRelease: ReturnSegmentToPool,
 					actionOnDestroy: DestroySegmentFromPool,
-					defaultCapacity: _gameplayData.EntryPoolDefaultCapacity,
-					maxSize: _gameplayData.EntryPoolMaxCapacity
+					defaultCapacity: _gameplayConfig.EntryPoolDefaultCapacity,
+					maxSize: _gameplayConfig.EntryPoolMaxCapacity
 				));
 			}
 			else
@@ -151,7 +147,8 @@ namespace Gameplay
 		{
 			foreach ( var preloadedElementsValue in _preloadedSegments.Values )
 			{
-				Addressables.ReleaseInstance( preloadedElementsValue.gameObject );
+				if (preloadedElementsValue != null)
+					Addressables.ReleaseInstance( preloadedElementsValue.gameObject );
 			}
 
 			_preloadedSegments.Clear();

@@ -17,7 +17,7 @@ namespace Gameplay
 		[Inject(Id = "ElementsContainerRef")] 
 		private AssetReference _elementsContainerRef;
 
-		[Inject] private GameplayData _gameplayData;
+		[Inject] private GameplayConfig _gameplayConfig;
 		
 		private GameplayElementsContainer _elementsContainerInstance;
 		private Dictionary<LevelSegmentRef, IObjectPool<LevelSegment>> _segmentsPool;
@@ -95,7 +95,10 @@ namespace Gameplay
 
 		private void DestroySegmentFromPool( LevelSegment segment )
 		{
-			GameObject.Destroy( segment.gameObject );
+			if (segment != null)
+			{
+				GameObject.Destroy( segment.gameObject );
+			}
 		}
 
 
@@ -103,7 +106,6 @@ namespace Gameplay
 
 		public void Dispose()
 		{
-			Debug.Log( $"{GetType()}: Dispose" );
 			Clear();
 			
 			_signalBus?.Unsubscribe<ExitGameplaySignal>( OnExitFromGameplay );
