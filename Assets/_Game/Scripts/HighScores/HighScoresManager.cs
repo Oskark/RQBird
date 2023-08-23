@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Gameplay;
+using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
@@ -29,6 +30,7 @@ public class HighScoreEntry
 }
 
 
+[UsedImplicitly]
 public class HighScoresManager : IHighScorable
 {
 	[Inject] private GameplayData _gameplayData;
@@ -76,12 +78,12 @@ public class HighScoresManager : IHighScorable
 		int lowestHighScoreValue;
 		var highScoresAmount = _gameplayData.SavedHighScoresAmount;
 
-		var highScorePosition = GetHighScorePosition( score );
+		var scorePosition = GetHighScorePosition( score );
         
-		var isHighScore = highScorePosition >= 0 && highScorePosition < highScoresAmount;
+		var isHighScore = scorePosition >= 0 && scorePosition < highScoresAmount;
 		if ( isHighScore )
 		{
-			_HighScores.Insert( highScorePosition, new HighScoreEntry( score, DateTime.Now.Ticks ) );
+			_HighScores.Insert( scorePosition, GenerateHighScoreEntry( score ) );
 
 			var isOverScoresLimit = _HighScores.Count > highScoresAmount;
 			if (isOverScoresLimit)
@@ -92,7 +94,7 @@ public class HighScoresManager : IHighScorable
 			
 			HighScoresSaveLoad.SaveScores( _HighScores ).Forget();
 
-			position = highScorePosition;
+			position = scorePosition;
 			lowestHighScoreValue = -1;
 			
 			onScoreRegistered?.Invoke( position, lowestHighScoreValue );
@@ -103,6 +105,12 @@ public class HighScoresManager : IHighScorable
 		lowestHighScoreValue = _HighScores.Count > 0 ? _HighScores[^1].Score : -1;
 		
 		onScoreRegistered?.Invoke( position, lowestHighScoreValue );
+	}
+
+	
+	private static HighScoreEntry GenerateHighScoreEntry( int score )
+	{
+		return new HighScoreEntry( score, DateTime.Now.Ticks );
 	}
 
 	private int GetHighScorePosition( int score )

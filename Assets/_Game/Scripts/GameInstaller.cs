@@ -12,7 +12,7 @@ namespace Gameplay.Levels
 	
 	public class GameInstaller : MonoInstaller, ISpawnInjectable
 	{
-		[SerializeField] private InputManager _InputManager;
+		// [SerializeField] private InputManager _InputManager;
 		[SerializeField] private LevelManager _LevelManager;
 		[SerializeField] private LevelGenerator _LevelGenerator;
 
@@ -22,12 +22,14 @@ namespace Gameplay.Levels
 		
 		public override void InstallBindings()
 		{
-			Container.BindInstance( _InputManager ).AsSingle();
 			Container.BindInstance( _LevelManager ).AsSingle();
 			Container.BindInstance( _LevelGenerator ).AsSingle();
 			
 			Container.BindInstance( _GameInstaller ).AsSingle();
+			
 			Container.Bind<ISpawnInjectable>().FromInstance( _GameInstaller ).AsSingle();
+			
+			Container.BindInterfacesAndSelfTo<InputManager>().FromNew().AsSingle();
 
 			// SignalBusInstaller.Install( Container );
 			//

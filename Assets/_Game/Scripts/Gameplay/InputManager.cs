@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using JetBrains.Annotations;
+using UnityEngine;
 using Zenject;
 
 namespace Gameplay
 {
-	public class InputManager : MonoBehaviour
+	[UsedImplicitly]
+	public class InputManager : ITickable, IDisposable
 	{
 		[Inject] private GameplayData _gameplayData;
 		
@@ -16,22 +19,15 @@ namespace Gameplay
 		private float _LastSlideChanged = 0;
 
 		private SignalBus _signalBus;
-		
+        
 
-
-
-		protected void Awake()
+		public void Dispose()
 		{
-			TouchController.JumpPressed -= OnJumpPressed;
-			TouchController.JumpPressed += OnJumpPressed;
-			
-			TouchController.SlidePerformed -= OnSlidePerformed;
-			TouchController.SlidePerformed += OnSlidePerformed;
-		}
-
-		private void OnDestroy()
-		{
+			Debug.Log($"Dispose"  );
 			_signalBus.Unsubscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+			
+			TouchController.JumpPressed -= OnJumpPressed;
+			TouchController.SlidePerformed -= OnSlidePerformed;
 		}
         
 		[Inject]
@@ -39,6 +35,12 @@ namespace Gameplay
 		{
 			_signalBus = signalBus;
 			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameStateChanged );
+			
+			TouchController.JumpPressed -= OnJumpPressed;
+			TouchController.JumpPressed += OnJumpPressed;
+			
+			TouchController.SlidePerformed -= OnSlidePerformed;
+			TouchController.SlidePerformed += OnSlidePerformed;
 		}
 		
 
@@ -48,15 +50,16 @@ namespace Gameplay
 
 			IsPaused = !isPlaying;
 		}
-
-		private void Update()
+		
+		public void Tick()
 		{
 			if ( IsPaused ) return;
 
 			WasJump = ReadTouchJump() || ReadKeyboardJump();
 			SlideChange = ReadTouchSlide() + ReadKeyboardSlide();
-        }
 
+		}
+        
 		private float ReadTouchSlide()
 		{
 			return _LastSlideChanged;
@@ -111,5 +114,7 @@ namespace Gameplay
 		{
 			_LastSlideChanged = change;
 		}
+
+
 	}
 }
