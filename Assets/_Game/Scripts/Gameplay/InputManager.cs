@@ -70,16 +70,10 @@ namespace Gameplay
 		{
 			if  (Input.GetKey(KeyCode.A) )
 			{
-				var  wasMovingRight = _currentKeyboardSlide > 0;
-				if ( wasMovingRight ) _currentKeyboardSlide = 0;
-				
 				_currentKeyboardSlide -= Time.deltaTime * _gameplayData.PlayerHorizontalSpeed_KeyboardSpeed;
 			}
 			else if ( Input.GetKey( KeyCode.D ) )
 			{
-				var wasMovingLeft = _currentKeyboardSlide < 0;
-				if (wasMovingLeft) _currentKeyboardSlide = 0;
-			
 				_currentKeyboardSlide += Time.deltaTime * _gameplayData.PlayerHorizontalSpeed_KeyboardSpeed;
 			}
 			else
