@@ -16,7 +16,12 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: b383463ae9762eb459096079766d6652
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 806db3dfd9186374d8e03b50fcc27674
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Rotating.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8b7b1ec35c802604eb34a71bf36d22ec, type: 2}
   m_SchemaSet:

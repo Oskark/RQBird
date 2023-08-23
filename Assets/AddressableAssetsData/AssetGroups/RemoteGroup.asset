@@ -22,38 +22,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 282fa1f625b4f9e42a42d383d0bfba7b
-    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Bottom.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fa2c158a35b261e4ba2fd5d265c0e7ac
-    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Top.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 80e080bf3e85db74ba4e1bb244283dde
-    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Right.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 178d8dde783a7284691616f93dbb48f3
-    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Left.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f990bd8687612d245a5bcd162f7176c5
-    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Top_Bottom.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0c56b455cdee375419a6e17ccca0957a
-    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Wall_Left_Right.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1f2b6b0411fc31e40ab0b098f953cd7c
-    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements/Floor.prefab
+  - m_GUID: 2be3e9c7a9bc25a4a82489231e3fc7ab
+    m_Address: Assets/_Game/Prefabs/Gameplay/MapElements
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
