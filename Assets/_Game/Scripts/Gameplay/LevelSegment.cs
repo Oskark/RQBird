@@ -8,9 +8,6 @@ namespace Gameplay.Levels
 {
 	public class LevelSegment : MonoBehaviour
 	{
-        
-		[SerializeField] private float _Speed = 8f;
-
 		public AssetReferenceGameObject OriginAssetRef { get; private set; }
 		[field: SerializeField] public Vector3 SpawnOffset { get; private set; }
 
@@ -21,7 +18,7 @@ namespace Gameplay.Levels
 
 		private bool _isPaused = false;
 
-		private Action<LevelSegment> _onElementDestroyed;
+		private Action<LevelSegment> _onElementPassedPlayer;
 		private SignalBus _signalBus;
 
 		[Inject]
@@ -29,29 +26,16 @@ namespace Gameplay.Levels
 		{
 			_levelManager = levelManager;
 			_signalBus = signalBus;
-			
-			Debug.Log($"Construct {name} {GetInstanceID()}"  );
-		}
-
-		private void OnGameplayStateChanged( GameplayStateChangedSignal newState )
+        }
+		
+		public void Activate()
 		{
-			var canMove = newState.CurrentState == GameState.Play;
-
-			SetPause (canMove == false);
-		}
-
-
-		private void Start()
-		{
-			if ( _levelManager == null )
-			{
-				Debug.LogError( $"No levelMAnager on {name}" );
-			}
+			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
 		}
 
 		public void Init( Action<LevelSegment> onElementDestroyed )
 		{
-			_onElementDestroyed = onElementDestroyed;
+			_onElementPassedPlayer = onElementDestroyed;
 		}
 
 		public void SetMyAssetRef( AssetReferenceGameObject asset )
@@ -61,35 +45,29 @@ namespace Gameplay.Levels
 
 		public void ResetData()
 		{
-			Debug.Log($"Reset data on {name} {GetInstanceID()}"  );
 			_isPaused = false;
-			_onElementDestroyed = null;
+			_onElementPassedPlayer = null;
 			
 			_signalBus.Unsubscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
-		}
-
-		private void OnDestroy()
-		{
-			Debug.Log( $"OnDestroy on {name} {GetInstanceID()}" );
 		}
 
 		private void Update()
 		{
 			if ( _isPaused ) return;
 
-			if ( _levelManager == null )
+			var  noLevelManager = _levelManager == null;
+			if ( noLevelManager )
 			{
 				return;
 			}
 			
-			transform.position += Vector3.back * (Time.deltaTime * _Speed * _levelManager.CurrentSpeed);
+			MoveSegment();
 
-			if ( transform.position.z < -_DistanceRemovalThreshold )
+			if ( AlreadyPassedDistanceRemovalThreshold() )
 			{
-				_onElementDestroyed?.Invoke(this);
+				ReportElementPassed();
 			}
 		}
-
 
 		public float GetZLength()
 		{
@@ -97,6 +75,30 @@ namespace Gameplay.Levels
 		}
 
 
+
+		private void MoveSegment()
+		{
+			transform.position += Vector3.back * (Time.deltaTime * _levelManager.CurrentSpeed);
+		}
+		
+		private bool AlreadyPassedDistanceRemovalThreshold()
+		{
+			return transform.position.z < -_DistanceRemovalThreshold;
+		}
+		
+		private void ReportElementPassed()
+		{
+			_onElementPassedPlayer?.Invoke( this );
+		}
+
+        
+		private void OnGameplayStateChanged( GameplayStateChangedSignal newState )
+		{
+			var canMove = newState.CurrentState == GameState.Play;
+
+			SetPause (canMove == false);
+		}
+        
 		private void SetPause( bool isPaused )
 		{
 			_isPaused = isPaused;
@@ -115,9 +117,6 @@ namespace Gameplay.Levels
 			return (mostLeftWorldPosition, mostRightWorldPosition);
 		}
 
-		public void Activate()
-		{
-			_signalBus.Subscribe<GameplayStateChangedSignal>( OnGameplayStateChanged );
-        }
+	
 	}
 }

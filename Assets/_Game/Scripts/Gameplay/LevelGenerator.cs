@@ -21,8 +21,6 @@ namespace Gameplay.Levels
 		[Inject]
 		public void Construct( SignalBus signal )
 		{
-			Debug.Log($"Level Generator Construct"  );
-
 			_signalBus = signal;
 			_signalBus.Subscribe<RestartGameSignal>( OnRestart );
 			_signalBus.Subscribe<ExitGameplaySignal>( OnRestart );
@@ -95,7 +93,6 @@ namespace Gameplay.Levels
 			
 			newObstacle.Init( instance =>
 			{
-				Debug.Log($"{GetType()}: On Element destroyed {instance} {instance.GetInstanceID()}"  );
 				if ( spawner.ShouldBeReportedAsPassed )
 				{
 					OnObstaclePassed?.Invoke();

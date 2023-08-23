@@ -11,7 +11,6 @@ public class ScriptablesInstaller : ScriptableObjectInstaller<ScriptablesInstall
     [SerializeField] private GameplayData _GameplayData;
     
     [SerializeField] private AssetReference _ElementsContainerRef;
-    [SerializeField] private HighScoresManager _HighScoresManager;
     
     private static bool _alreadyInstalled = false;
     

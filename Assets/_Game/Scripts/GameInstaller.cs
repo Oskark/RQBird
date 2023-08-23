@@ -16,7 +16,6 @@ namespace Gameplay.Levels
 		public override void InstallBindings()
 		{
 			Container.BindInstance( _PlayerController ).AsSingle();
-			
 			Container.BindInstance( _GameInstaller ).AsSingle();
             
 			Container.BindInterfacesAndSelfTo<InputManager>().FromNew().AsSingle();

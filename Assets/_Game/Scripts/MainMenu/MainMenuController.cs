@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -27,10 +24,14 @@ public class MainMenuController : MonoBehaviour
 
     public void Evt_StartGame()
     {
-        _gameplayPreloader.MakeSurePreloadCompletedAndThen( () =>
+        _gameplayPreloader.MakeSurePreloadCompletedAndThen( LoadGameplay);
+
+        return;
+        
+        void LoadGameplay()
         {
             SceneManager.LoadScene( "Gameplay" );
-        });
+        }
     }
     
     public void Evt_QuitGame()

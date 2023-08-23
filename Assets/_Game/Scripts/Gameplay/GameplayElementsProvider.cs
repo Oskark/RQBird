@@ -73,7 +73,6 @@ namespace Gameplay
 		private LevelSegment CreateSegmentForPool( AssetReferenceGameObject @ref )
 		{
 			var instance = GameInstaller.SpawnStatic( _preloadedSegments[@ref].gameObject ).GetComponent<LevelSegment>();
-			Debug.Log($"Create segment for {instance} {instance.GetInstanceID()}"  );
 			instance.transform.SetParent( _poolContainer );
 			instance.gameObject.SetActive( false );
 
@@ -83,8 +82,6 @@ namespace Gameplay
 
 		private void GetSegmentFromPool( LevelSegment segment )
 		{
-			Debug.Log($"GetSegmentFromPool for {segment} {segment.GetInstanceID()}"  );
-
 			segment.gameObject.SetActive( true );
 			segment.Activate();
 		}
@@ -108,6 +105,8 @@ namespace Gameplay
 		{
 			Debug.Log( $"{GetType()}: Dispose" );
 			Clear();
+			
+			_signalBus?.Unsubscribe<ExitGameplaySignal>( OnExitFromGameplay );
 		}
 		
 		public void Clear()

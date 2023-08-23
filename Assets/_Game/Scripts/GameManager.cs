@@ -92,7 +92,7 @@ namespace Gameplay.Levels
 
 		private void RegisterScoreAndThen(Action<int, int, int> then)
 		{
-			var obtainedScore = (int) _LevelManager.DistancePassed;
+			var obtainedScore = (int) _LevelManager.TimeSurvived;
             
 			_HighScoresManager.RegisterScoreAndThen( obtainedScore, ThenFunc );
 			return;

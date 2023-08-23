@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
 
     private float _leftBound;
     private float _rightBound;
-    public Collider Collider => _collider;
 
     [Inject]
     public void Construct( SignalBus signalBus )
@@ -41,9 +40,8 @@ public class PlayerController : MonoBehaviour
         var isFinished = newState.CurrentState == GameState.Result;
         if ( isFinished )
         {
-            _isPaused = true;
-            _Rigidbody.isKinematic = false; // Player can fall on failure
-            
+            SetFinished();
+
             return;
         }
 
@@ -59,6 +57,7 @@ public class PlayerController : MonoBehaviour
         
         SetPause( isPlaying == false );
     }
+
 
     private void InitLevelData()
     {
@@ -121,7 +120,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            RemoveLastPosition();
+            RemoveSavedLastPosition();
         }
     }
 
@@ -133,7 +132,7 @@ public class PlayerController : MonoBehaviour
         var currentPos = Mathf.InverseLerp( _leftBound, _rightBound, _lastPositionX.Value );
         // Where we should be in the level?
         var targetPos = currentPos + (slideChange * _gameplayData.PlayerHorizontalSpeed);
-        // Clamp to [0..1]
+        // Clamp to [-1..1]
         targetPos = Mathf.Clamp( targetPos, -1f, 1 );
         // Change to local pos
         var newPosition = Mathf.Lerp( _leftBound, _rightBound, targetPos );
@@ -141,7 +140,7 @@ public class PlayerController : MonoBehaviour
         _Rigidbody.position = _Rigidbody.position.With( x: newPosition );
     }
     
-    private void RemoveLastPosition()
+    private void RemoveSavedLastPosition()
     {
         _lastPositionX = null;
     }
@@ -164,7 +163,13 @@ public class PlayerController : MonoBehaviour
     public void SetPause( bool isPaused )
     {
         _isPaused = isPaused;
-
         _Rigidbody.isKinematic = isPaused;
     }
+    
+    private void SetFinished()
+    {
+        _isPaused = true;
+        _Rigidbody.isKinematic = false; // Player can fall on failure
+    }
+
 }

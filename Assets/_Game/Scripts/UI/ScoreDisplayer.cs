@@ -14,7 +14,7 @@ public class ScoreDisplayer : MonoBehaviour
 	private void Update()
 	{
 		_StringBuilder.Clear();
-		_StringBuilder.Append( Mathf.FloorToInt(_LevelManager.DistancePassed) );
+		_StringBuilder.Append( Mathf.FloorToInt(_LevelManager.TimeSurvived) );
 		
 		_Text.text = (_StringBuilder.ToString());
 	}

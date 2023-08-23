@@ -8,13 +8,13 @@ namespace Gameplay.Levels
 		[Inject] private GameplayData _gameplayData;
 		[Inject] private LevelGenerator _LevelGenerator;
 
-		public float DistancePassed => _distancePassed;
+		public float TimeSurvived => _timeSurvived;
 		public float CurrentSpeed => _basePlayerSpeed + _accelerationPerAdvance * _accelerationsAmount;
 		
 		private int _obstaclesPassed = 0;
 		private int _accelerationsAmount = 0;
 		
-		private float _distancePassed = 0;
+		private float _timeSurvived = 0;
 		private bool _isPaused = false;
 		
 		private int _accelerationsCountToIncreaseSpeed;
@@ -41,7 +41,7 @@ namespace Gameplay.Levels
 			_basePlayerSpeed = _gameplayData.PlayerMoveSpeed;
 			_accelerationPerAdvance = _gameplayData.AccelerationPerAdvance;
 
-			_distancePassed = 0;
+			_timeSurvived = 0;
 			_isPaused = false;
 
 			_obstaclesPassed = 0;
@@ -74,7 +74,7 @@ namespace Gameplay.Levels
 		{
 			if (_isPaused) return;
 
-			UpdateDistancePassed();
+			UpdateTime();
 		}
 		
 		public (float left, float right) GetLevelBounds()
@@ -88,9 +88,9 @@ namespace Gameplay.Levels
         }
 
 
-		private void UpdateDistancePassed()
+		private void UpdateTime()
 		{
-			_distancePassed += _basePlayerSpeed * Time.deltaTime;
+			_timeSurvived += Time.deltaTime;
 		}
 
 		public void GenerateLevel()

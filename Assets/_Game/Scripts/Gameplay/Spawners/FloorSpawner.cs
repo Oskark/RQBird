@@ -6,7 +6,6 @@ using Zenject;
 
 public class FloorSpawner : ILevelSegmentSpawner
 {
-
 	[Inject] private LevelGenerator _levelGenerator;
 	[Inject] private GameplayElementsProvider _gameplayElementsProvider;
     
@@ -39,9 +38,8 @@ public class FloorSpawner : ILevelSegmentSpawner
 
 	public LevelSegment GetSegmentInstance()
 	{
-		var instance =  _gameplayElementsProvider.GetFloor();
+		var instance = _gameplayElementsProvider.GetFloor();
 		
-		Debug.Log($"Added floor: {instance} {instance.GetInstanceID()}"  );
 		SpawnedSegments.Add( instance );
 
 		return instance;
@@ -49,12 +47,14 @@ public class FloorSpawner : ILevelSegmentSpawner
 
 	public void OnObstacleDestroyed( LevelSegment instance )
 	{
-		Debug.Log($"Removed floor: {instance} {instance.GetInstanceID()}"  );
 		if (SpawnedSegments.Contains( instance ))
 		{
 			SpawnedSegments.Remove( instance );
 		}
-		else Debug.LogError($"Spawned Segments did not found {instance} {instance.GetInstanceID()}"  );
+		else
+		{
+			Debug.LogError( $"Spawned Segments was not found {instance} {instance.GetInstanceID()} in container"  );
+		}
 
 		_gameplayElementsProvider.ReturnSegment( instance );
 
@@ -70,8 +70,6 @@ public class FloorSpawner : ILevelSegmentSpawner
 				return;
 			}
 			
-			Debug.Log($"Cleaning floor: {segment} {segment.GetInstanceID()}"  );
-
 			_gameplayElementsProvider.ReturnSegment( segment );
 		} );
 		
