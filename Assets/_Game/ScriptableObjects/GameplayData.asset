@@ -21,6 +21,8 @@ MonoBehaviour:
   <ObstaclesPassedToAccelerate>k__BackingField: 3
   <AccelerationPerAdvance>k__BackingField: 0.2
   <ObstaclesDistance>k__BackingField: 10
+  <FloorsAmount>k__BackingField: 10
+  <ObstaclesAmount>k__BackingField: 10
   <EntryPoolDefaultCapacity>k__BackingField: 3
   <EntryPoolMaxCapacity>k__BackingField: 5
   <SavedHighScoresAmount>k__BackingField: 20

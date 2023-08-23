@@ -13,6 +13,8 @@ namespace Gameplay
 
 		[field: Header("Map Settings")]
 		[field: SerializeField] public float CeilingHeight { get; private set; } = 10f;
+		[field: SerializeField] public int CountdownFrom { get; set; } = 3;
+
 
 		[field: Header( "Level Settings" )]
 		[field: SerializeField] public float FirstObstacleSpawnDistanceFromFirstFloorEnd { get; set; } = 10f;

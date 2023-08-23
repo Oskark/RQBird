@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace Gameplay.UI
 {
@@ -10,8 +11,9 @@ namespace Gameplay.UI
 	{
 
 		[Header( "Config" )] [SerializeField] private bool _IsEnabled = true;
-		[SerializeField] private int _CountFrom = 3;
 
+		[Inject] private GameplayConfig _gameplayConfig;
+		
 		[Header( "Refs" )] [SerializeField] private TextMeshProUGUI _CountdownValue;
 
 		public void ShowCountdown( Action onCountdownFinished )
@@ -22,7 +24,9 @@ namespace Gameplay.UI
 				return;
 			}
 
-			ShowCountdown( _CountFrom, onCountdownFinished );
+			var countFrom = _gameplayConfig.CountdownFrom;
+			
+			ShowCountdown( countFrom, onCountdownFinished );
 		}
 
 		private void ShowCountdown( int countFrom, Action onFinish )
